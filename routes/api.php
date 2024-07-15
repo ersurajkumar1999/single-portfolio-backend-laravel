@@ -8,3 +8,11 @@ use Illuminate\Support\Facades\Route;
 // })->middleware('auth:sanctum');
 
 Route::get('profile', [UserController::class, 'index']);
+
+Route::get('about', [UserController::class, 'about']);
+Route::get('skills', [UserController::class, 'skills']);
+Route::get('resume', [UserController::class, 'resume']);
+Route::get('service', [UserController::class, 'service']);
+Route::get('portfolio', [UserController::class, 'portfolio']);
+Route::get('testimonial', [UserController::class, 'testimonial']);
+Route::get('general-settings', [UserController::class, 'generalSettings']);
