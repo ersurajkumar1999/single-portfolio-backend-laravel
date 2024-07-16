@@ -1,6 +1,6 @@
 @extends('auth.layout.index')
 @section('content')
-    <h4 class="mb-2">Welcome to Sneat! 👋</h4>
+    <h4 class="mb-2">Welcome to Portfolio! 👋</h4>
     <p class="mb-4">Please sign-in to your account and start the adventure</p>
 
     <form class="mb-3" action="{{ route('auth.login') }}" method="POST"  >
@@ -24,9 +24,9 @@
     <div class="mb-3 form-password-toggle">
         <div class="d-flex justify-content-between">
         <label class="form-label" for="password">Password</label>
-        <a href="auth-forgot-password-basic.html">
+        <!-- <a href="auth-forgot-password-basic.html">
             <small>Forgot Password?</small>
-        </a>
+        </a> -->
         </div>
         <div class="input-group input-group-merge">
         <input

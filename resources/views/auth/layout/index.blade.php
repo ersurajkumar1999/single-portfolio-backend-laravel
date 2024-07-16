@@ -22,7 +22,7 @@
             <div class="card-body">
               <!-- Logo -->
               <div class="app-brand justify-content-center">
-                <a href="index.html" class="app-brand-link gap-2">
+                <a href="{{url('/')}}" class="app-brand-link gap-2">
                   <span class="app-brand-logo demo">
                     <svg
                       width="25"
@@ -79,12 +79,12 @@
 
               @yield('content')
 
-              <p class="text-center">
+              <!-- <p class="text-center">
                 <span>New on our platform?</span>
                 <a href="auth-register-basic.html">
                   <span>Create an account</span>
                 </a>
-              </p>
+              </p> -->
             </div>
           </div>
           <!-- /Register -->

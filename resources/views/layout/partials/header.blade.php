@@ -11,7 +11,7 @@
               <ul class="navbar-nav flex-row align-items-center ms-auto">
                 <!-- Place this tag where you want the button to render. -->
                 <li class="nav-item lh-1 me-3">
-                  <a href="#" target="_blank" class="nav-link dropdown-toggle hide-arrow"><i class="bx bx-globe bx-md"></i></a>
+                  <a href="https://lonely-portfolio-12-july.vercel.app" target="_blank" class="nav-link dropdown-toggle hide-arrow"><i class="bx bx-globe bx-md"></i></a>
                 </li>
 
                 <!-- User -->
