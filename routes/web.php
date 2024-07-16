@@ -19,6 +19,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('about', [DashboardController::class, 'about'])->name('about.index');
     Route::post('about/{id}', [DashboardController::class, 'aboutUpdate'])->name('about.create');
+    Route::post('about-item-create', [DashboardController::class, 'aboutItemCreate'])->name('about.item.create');
     Route::get('skills', [DashboardController::class, 'skills'])->name('skills.index');
     Route::post('skills', [DashboardController::class, 'skills'])->name('skills.create');
     Route::get('resume', [DashboardController::class, 'resume'])->name('resume.index');

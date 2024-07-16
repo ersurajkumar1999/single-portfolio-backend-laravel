@@ -4,7 +4,7 @@
             <h5 class="card-header">About List</h5>
             <div class="add-new-btn">
 
-                <button class="btn btn-primary">Add Item</button>
+                <button class="btn btn-primary btnAddAbout">Add Item</button>
             </div>
             <div class="table-responsive text-nowrap">
                 <table class="table" id="userTable">
@@ -43,10 +43,14 @@
         </div>
     </div>
 </div>
-
+<script src="https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.js"></script>
 <script type="text/javascript">
     $(document).ready( function () {
         // $('#userTable').DataTable();
         var table = $('#userTable').DataTable();
+
+        $('.btnAddAbout').on('click', function() {
+            alert("alll");
+        })
     } );
 </script>
