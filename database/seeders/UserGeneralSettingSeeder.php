@@ -34,6 +34,7 @@ class UserGeneralSettingSeeder extends Seeder
             'email2' => null,
             'address' => '123 Main St, City, Country',
             'copyright_description' => '© 2024 Your Company. All rights reserved.',
+            'theme_color' => 'emerald',
         ]);
     }
 }

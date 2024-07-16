@@ -28,6 +28,8 @@ return new class extends Migration
             $table->string('email2')->nullable();
             $table->string('address');
             $table->text('copyright_description');
+            $table->text('theme_color')->default('emerald');
+
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });

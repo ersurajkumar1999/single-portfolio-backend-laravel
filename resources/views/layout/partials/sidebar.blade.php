@@ -1,6 +1,6 @@
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
           <div class="app-brand demo">
-            <a href="index.html" class="app-brand-link">
+            <a href="{{route('dashboard.index')}}" class="app-brand-link">
               <span class="app-brand-logo demo">
                 <svg
                   width="25"
@@ -70,43 +70,43 @@
             </li>
             <li class="menu-item {{ (Request::route()->getName() == 'about.index') ? "active": '' }} ">
               <a href="{{route('about.index')}}" class="menu-link">
-              <i class="menu-icon tf-icons bx bx-home-circle"></i>
+              <i class="menu-icon tf-icons bx bx-dock-top"></i>
                 <div data-i18n="Basic">About </div>
               </a>
             </li>
             <li class="menu-item {{ (Request::route()->getName() == 'skills.index') ? "active": '' }} ">
               <a href="{{route('skills.index')}}" class="menu-link">
-              <i class="menu-icon tf-icons bx bx-home-circle"></i>
+              <i class="menu-icon tf-icons bx bx-dock-top"></i>
                 <div data-i18n="Basic">Skills </div>
               </a>
             </li>
             <li class="menu-item {{ (Request::route()->getName() == 'resume.index') ? "active": '' }} ">
               <a href="{{route('resume.index')}}" class="menu-link">
-              <i class="menu-icon tf-icons bx bx-home-circle"></i>
+              <i class="menu-icon tf-icons bx bx-dock-top"></i>
                 <div data-i18n="Basic">Resume </div>
               </a>
             </li>
             <li class="menu-item {{ (Request::route()->getName() == 'service.index') ? "active": '' }} ">
               <a href="{{route('service.index')}}" class="menu-link">
-              <i class="menu-icon tf-icons bx bx-home-circle"></i>
+              <i class="menu-icon tf-icons bx bx-dock-top"></i>
                 <div data-i18n="Basic">Service </div>
               </a>
             </li>
             <li class="menu-item {{ (Request::route()->getName() == 'portfolio.index') ? "active": '' }} ">
               <a href="{{route('portfolio.index')}}" class="menu-link">
-              <i class="menu-icon tf-icons bx bx-home-circle"></i>
+              <i class="menu-icon tf-icons bx bx-dock-top"></i>
                 <div data-i18n="Basic">Portfolio </div>
               </a>
             </li>
             <li class="menu-item {{ (Request::route()->getName() == 'testimonial.index') ? "active": '' }} ">
               <a href="{{route('testimonial.index')}}" class="menu-link">
-              <i class="menu-icon tf-icons bx bx-home-circle"></i>
+              <i class="menu-icon tf-icons bx bx-dock-top"></i>
                 <div data-i18n="Basic">Testimonial </div>
               </a>
             </li>
             <li class="menu-item {{ (Request::route()->getName() == 'contact.index') ? "active": '' }} ">
               <a href="{{route('contact.index')}}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                <i class="menu-icon tf-icons bx bx-support"></i>
                 <div data-i18n="Basic">Contacts </div>
               </a>
             </li>
