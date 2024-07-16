@@ -14,7 +14,7 @@ class LogoutController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        toastr()->success('Goodbye, ' . $user->name . '! You have successfully logged out.');
+        flash()->success('Goodbye, ' . $user->name . '! You have successfully logged out.');
         return redirect()->route('auth.login');
     }
 }

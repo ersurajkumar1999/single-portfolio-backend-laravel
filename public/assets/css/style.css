@@ -6,3 +6,12 @@
 .bx-md {
     font-size: 1.5rem !important;
 }
+.about-image{
+    height: 150px;
+    width: 150px;
+    margin: 0 auto;
+}
+.about-image img{
+    height: 100%;
+    width: 100%;
+}

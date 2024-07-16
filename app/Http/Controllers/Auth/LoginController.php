@@ -20,11 +20,11 @@ class LoginController extends Controller
         
         if (Auth::attempt($credentials, $remember)) {
             $user = Auth::user();
-            toastr()->success('Welcome back, ' . $user->name . '! You have successfully logged in.');
+            flash()->success('Welcome back, ' . $user->name . '! You have successfully logged in.');
             return redirect()->route('dashboard');
         }
 
-        toastr()->error('Login failed. Please check your credentials and try again.');
+        flash()->error('Login failed. Please check your credentials and try again.');
         return redirect()->route('login')->withInput();
     }
 }

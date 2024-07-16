@@ -11,6 +11,7 @@ class About extends Model
     protected $fillable = [
         'user_id', 'image', 'title', 'description',
     ];
+    
 
     public function items()
     {
