@@ -14,6 +14,6 @@ class Skill extends Model
 
     public function items()
     {
-        return $this->hasMany(SkillItem::class);
+        return $this->hasMany(SkillItem::class)->orderBy('id', 'desc');
     }
 }

@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="card mb-4">
-            <h5 class="card-header">About Information</h5>
+            <h5 class="card-header">Resume Information</h5>
             <form method="POST" action="{{route('about.create')}}" enctype="multipart/form-data">
                 @csrf
                 @method('POST')
@@ -31,6 +31,7 @@
                         </div>
                         <div class="col-md-6 mt-2">
                             <div class="about-image">
+                                <!-- <img src="{{asset('assets/images/default.png')}}" alt="about" /> -->
                                <a target="_blank" href="{{$about->image}}"> <img src="{{$about->image}}" alt="about" /></a>
                             </div>
                         </div>

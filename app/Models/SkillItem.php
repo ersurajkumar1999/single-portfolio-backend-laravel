@@ -14,6 +14,6 @@ class SkillItem extends Model
 
     public function skill()
     {
-        return $this->belongsTo(Skill::class);
+        return $this->belongsTo(Skill::class)->orderBy('id', 'desc');
     }
 }

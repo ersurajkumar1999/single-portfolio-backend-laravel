@@ -118,6 +118,15 @@
                 <div data-i18n="Basic">Profile </div>
               </a>
             </li>
+
+            <li class="menu-item {{ (Request::route()->getName() == 'open-ai.index') ? "active": '' }} ">
+              <a href="{{route('open-ai.index')}}" class="menu-link">
+                <i class="bx bx-user me-2"></i>
+
+                <div data-i18n="Basic">Open AI </div>
+              </a>
+            </li>
+
             <li class="menu-item {{ (Request::route()->getName() == 'general-setting.index') ? "active": '' }} ">
               <a href="{{route('general-setting.index')}}" class="menu-link">
               <i class="bx bx-cog me-2"></i>

@@ -14,6 +14,6 @@ class Testimonial extends Model
 
     public function items()
     {
-        return $this->hasMany(TestimonialItem::class);
+        return $this->hasMany(TestimonialItem::class)->orderBy('id', 'desc');
     }
 }

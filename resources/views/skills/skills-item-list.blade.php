@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="card">
-            <h5 class="card-header">About List</h5>
+            <h5 class="card-header">Skill List</h5>
             <div class="add-new-btn">
                 <button type="button" class="btn btn-primary" onclick="addNewItem()" id=""><i class='bx bx-plus-medical'></i></button>
             </div>
@@ -10,20 +10,18 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Text</th>
-                            <th>Icon</th>
-                            <th>Number</th>
+                            <th>Name</th>
+                            <th>Value</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($about->items as $key=> $item)
+                        @foreach ($skill->items as $key=> $item)
                         <tr>
                             <td>{{ $key + 1 }}</td>
-                            <td>{{ $item->text }}</td>
-                            <td>{{ $item->icon }}</td>
-                            <td>{{ $item->number }}</td>
+                            <td>{{ $item->name }}</td>
+                            <td>{{ $item->value }}</td>
                             <td>
                                 <span class="{{ $item->status == 1 ? 'text-success' : 'text-danger' }}">
                                     {{ $item->status == 1 ? 'Active' : 'Inactive' }}
@@ -35,7 +33,7 @@
                             </td>
                         </tr>
                         @endforeach
-                        @if ($about->items->isEmpty())
+                        @if ($skill->items->isEmpty())
                         <tr>
                             <td colspan="5">No items found.</td>
                         </tr>
@@ -60,25 +58,24 @@
                 aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="addItemForm" method="post" action="{{route('about.item.create')}}">
+                <form id="addItemForm" method="post" action="{{route('skill.item.create')}}">
                     @csrf
                     <input type="hidden" name="id" id="itemId">
                     <div class="row g-2">
-                        <div class="col mb-0">
-                            <label for="text" class="form-label">Text</label>
-                            <input type="text" id="text" class="form-control" placeholder="Text" name="text" required />
-                        </div>
-                        <div class="col mb-0">
-                            <label for="icon" class="form-label">Icon</label>
-                            <input type="text" id="icon" class="form-control" name="icon" required />
+                        <div class="col-12 mb-0">
+                            <label for="text" class="form-label">Name</label>
+                            <input type="text" id="name" class="form-control" placeholder="name" name="name" required />
                         </div>
                     </div>
-                    <div class="row g-2">
+                    <div class="row mt-2">
                         <div class="col mb-0">
-                            <label for="number" class="form-label">Number</label>
-                            <input type="number" id="number" class="form-control" placeholder="123" name="number" required />
+                            <label for="value" class="form-label">Value</label>
+                            <input type="number" id="value" class="form-control" placeholder="123" name="value" required />
                         </div>
-                        <div class="col mb-0">
+                        
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-12 mb-0">
                             <label for="dobBasic" class="form-label">Status</label>
                             <select name="status" id="status" class="form-control"  required>
                                 <option value="1">Active</option>
@@ -109,7 +106,7 @@
                 aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="addItemForm" method="post" action="{{route('about.item.delete')}}">
+                <form id="addItemForm" method="post" action="{{route('skill.item.delete')}}">
                     @csrf
                     <input type="hidden" name="delete_item_id" id="deleteItemId">
 
@@ -160,9 +157,8 @@
 
         function setItemValue(item) {
             $('#itemId').val(item.id);
-            $('#text').val(item.text);
-            $('#icon').val(item.icon);
-            $('#number').val(item.number);
+            $('#name').val(item.name);
+            $('#value').val(item.value);
             $('#status').val(item.status);
         }
     </script>

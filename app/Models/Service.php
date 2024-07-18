@@ -14,6 +14,6 @@ class Service extends Model
 
     public function items()
     {
-        return $this->hasMany(ServiceItem::class);
+        return $this->hasMany(ServiceItem::class)->orderBy('id', 'desc');
     }
 }

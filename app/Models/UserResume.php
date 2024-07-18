@@ -15,11 +15,11 @@ class UserResume extends Model
 
     public function educationEntries()
     {
-        return $this->hasMany(EducationEntry::class, 'resume_id');
+        return $this->hasMany(EducationEntry::class, 'resume_id')->orderBy('id', 'desc');
     }
 
     public function experienceEntries()
     {
-        return $this->hasMany(ExperienceEntry::class, 'resume_id');
+        return $this->hasMany(ExperienceEntry::class, 'resume_id')->orderBy('id', 'desc');
     }
 }

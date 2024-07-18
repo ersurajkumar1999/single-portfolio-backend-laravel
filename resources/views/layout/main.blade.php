@@ -46,9 +46,22 @@
   <!-- Place this tag in your head or just before your close body tag. -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>
 
-  <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
+  <!-- <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script> -->
 
   <script src="https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.js"></script>
+
+  <script src="https://cdn.tiny.cloud/1/i7pkne6zvygu1pxsly827fg1zuefmtwy8wp5htau7naiywww/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+  <script>
+    tinymce.init({
+      selector: 'textarea#description', // Replace this CSS selector to match the placeholder element for TinyMCE
+      height: 300,
+      menubar: false,
+      plugins: 'code table lists',
+      toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table'
+    });
+  </script>
+
+  <script src="https://corporate-uk-stage.birdierun-dev.com/plugins/datatable/datatables.min.js"></script>
 </body>
 
 </html>

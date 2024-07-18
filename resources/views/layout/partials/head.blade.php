@@ -29,6 +29,8 @@
     <link rel="stylesheet" href="{{asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css')}}" />
     <link rel="stylesheet" href="{{asset('assets/vendor/libs/apex-charts/apex-charts.css')}}" />
 
+    <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css"> -->
+    <link href="https://corporate-uk-stage.birdierun-dev.com/plugins/datatable/datatables.min.css" rel="stylesheet" />
     <!-- Page CSS -->
 
     <!-- Helpers -->
@@ -38,4 +40,4 @@
     <script src="{{asset('assets/js/config.js')}}"></script>
 
 
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" />
+    <!-- <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" /> -->

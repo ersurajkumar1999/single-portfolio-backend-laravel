@@ -23,6 +23,6 @@ class Portfolio extends Model
      */
     public function items()
     {
-        return $this->hasMany(PortfolioItem::class);
+        return $this->hasMany(PortfolioItem::class)->orderBy('id', 'desc');
     }
 }

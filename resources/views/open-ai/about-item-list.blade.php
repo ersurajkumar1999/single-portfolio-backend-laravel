@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="card">
-            <h5 class="card-header">About List</h5>
+            <h5 class="card-header">Open AI List</h5>
             <div class="add-new-btn">
                 <button type="button" class="btn btn-primary" onclick="addNewItem()" id=""><i class='bx bx-plus-medical'></i></button>
             </div>

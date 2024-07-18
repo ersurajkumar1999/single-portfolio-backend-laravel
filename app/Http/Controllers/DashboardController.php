@@ -2,8 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ImageUploadHelper;
+use App\Http\Requests\CreateAboutItemRequest;
+use App\Http\Requests\CreateServiceItemRequest;
+use App\Http\Requests\CreateSkillItemRequest;
 use App\Http\Requests\UpdateAboutRequest;
+use App\Http\Requests\UpdateServiceRequest;
+use App\Http\Requests\UpdateSkillRequest;
 use App\Models\About;
+use App\Models\AboutItem;
+use App\Models\Service;
+use App\Models\ServiceItem;
+use App\Models\Skill;
+use App\Models\SkillItem;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -12,6 +23,8 @@ class DashboardController extends Controller
 {
     protected $userId;
     protected $aboutId;
+    protected $skillId;
+    protected $serviceId;
 
     // Constructor
     public function __construct()
@@ -19,6 +32,8 @@ class DashboardController extends Controller
         // Initialize any property
         $this->userId = 1;
         $this->aboutId = 1;
+        $this->skillId = 1;
+        $this->serviceId = 1;
     }
     public function index()
     {
@@ -27,34 +42,25 @@ class DashboardController extends Controller
 
     public function about()
     {
-        $about  = About::with('items')->where('user_id', $this->userId)->first();
+        $about = About::with('items')->where('user_id', $this->userId)->first();
         return view('about.index', compact('about'));
     }
-    public function aboutUpdate(UpdateAboutRequest $request, About $about)
+    public function aboutUpdate(UpdateAboutRequest $request)
     {
         $validated = $request->validated();
-        Log::info('Validated data:', $validated);
         try {
-            // Check if the image is present in the request
-            if ($request->hasFile('image')) {
-                // Store the uploaded image in the public disk and the about_images directory
-                $imagePath = $request->file('image')->store('about_images', 'public');
+            $about = About::where('user_id', $this->userId)->firstOrFail();
 
-                // Add the image path to the validated data array
+            if ($request->hasFile('image')) {
+                // Generate a unique file name
+                $image = $request->file('image');
+                $fileName = 'about-image-' . $this->aboutId . '.' . $image->getClientOriginalExtension();
+                $imagePath = ImageUploadHelper::uploadImage($image, $fileName, 'about-images');
                 $validated['image'] = $imagePath;
             }
 
-            // Update the about entity with validated data
-            $data = $about->update($validated);
-
-            // Debugging line to see the result of the update
-            Log::info('Update result:', ['result' => $data]);
-
-            if ($data) {
-                flash()->success('About section updated successfully.');
-            } else {
-                flash()->error('Failed to update about section.');
-            }
+            $about->update($validated);
+            flash()->success('About section updated successfully.');
         } catch (Exception $e) {
             Log::error('Update error:', ['message' => $e->getMessage()]);
             toastr()->error('An error occurred while updating the about section.');
@@ -62,38 +68,190 @@ class DashboardController extends Controller
         return redirect()->back();
     }
 
+    public function aboutItemCreate(CreateAboutItemRequest $request)
+    {
+        $validated = $request->validated();
+        $itemId = $request->id;
+        try {
+            $validated['about_id'] = $this->aboutId;
+            if ($itemId) {
+                // Update existing item
+                $aboutItem = AboutItem::findOrFail($itemId);
+                $aboutItem->update($validated);
+                flash()->success('About item updated successfully.');
+            } else {
+                // Create new item
+                AboutItem::create($validated);
+                flash()->success('About item created successfully.');
+            }
+
+            return redirect()->route('about.index');
+        } catch (Exception $e) {
+            flash()->error('An error occurred while saving the about item.');
+            Log::error('Error saving about item:', ['message' => $e->getMessage()]);
+            return redirect()->back()->with('error', 'An error occurred while saving the about item.');
+        }
+    }
+    public function aboutItemDelete(Request $request)
+    {
+        try {
+            // Find the item by ID
+            $item = AboutItem::findOrFail($request->delete_item_id);
+            // Delete the item
+            $item->delete();
+            flash()->success('Item deleted successfully.');
+        } catch (Exception $e) {
+            Log::error('Error saving about item:', ['message' => $e->getMessage()]);
+            flash()->error('An error occurred while deleting the item.');
+        }
+        return redirect()->back();
+    }
+
     public function skills()
     {
-        return view('dashboard.skills');
+        $skill = Skill::with('items')->where('user_id', $this->userId)->first();
+        return view('skills.index', compact('skill'));
+    }
+    public function skillUpdate(UpdateSkillRequest $request)
+    {
+        $validated = $request->validated();
+        try {
+            $about = Skill::where('user_id', $this->userId)->firstOrFail();
+            $about->update($validated);
+            flash()->success('Skill section updated successfully.');
+        } catch (Exception $e) {
+            Log::error('Update error:', ['message' => $e->getMessage()]);
+            toastr()->error('An error occurred while updating the Skill section.');
+        }
+        return redirect()->back();
+    }
+    public function skillItemCreate(CreateSkillItemRequest $request)
+    {
+        $validated = $request->validated();
+        $itemId = $request->id;
+        try {
+            $validated['skill_id'] = $this->skillId;
+            if ($itemId) {
+                // Update existing item
+                $aboutItem = SkillItem::findOrFail($itemId);
+                $aboutItem->update($validated);
+                flash()->success('Skill item updated successfully.');
+            } else {
+                // Create new item
+                SkillItem::create($validated);
+                flash()->success('Skill item created successfully.');
+            }
+
+        } catch (Exception $e) {
+            flash()->error('An error occurred while saving the about item.');
+            Log::error('Error saving about item:', ['message' => $e->getMessage()]);
+        }
+        return redirect()->route('skills.index');
+    }
+    public function skillItemDelete(Request $request)
+    {
+        try {
+            // Find the item by ID
+            $item = SkillItem::findOrFail($request->delete_item_id);
+            // Delete the item
+            $item->delete();
+            flash()->success('Skill deleted successfully.');
+        } catch (Exception $e) {
+            Log::error('Error saving about item:', ['message' => $e->getMessage()]);
+            flash()->error('An error occurred while deleting the item.');
+        }
+        return redirect()->back();
     }
 
     public function resume()
     {
-        return view('dashboard.resume');
+        $about = About::with('items')->where('user_id', $this->userId)->first();
+        return view('resume.index', compact('about'));
     }
 
     public function service()
     {
-        return view('dashboard.service');
+        $service = Service::with('items')->where('user_id', $this->userId)->first();
+        return view('service.index', compact('service'));
+    }
+    public function serviceUpdate(UpdateServiceRequest $request)
+    {
+        $validated = $request->validated();
+        try {
+            $service = Service::where('user_id', $this->userId)->firstOrFail();
+            $service->update($validated);
+            flash()->success('Service section updated successfully.');
+        } catch (Exception $e) {
+            Log::error('Update error:', ['message' => $e->getMessage()]);
+            toastr()->error('An error occurred while updating the Service section.');
+        }
+        return redirect()->back();
+    }
+    public function serviceItemCreate(CreateServiceItemRequest $request)
+    {
+        
+        $validated = $request->validated();
+        $itemId = $request->id;
+        try {
+            $validated['service_id'] = $this->serviceId;
+            if ($itemId) {
+                // Update existing item
+                $aboutItem = ServiceItem::findOrFail($itemId);
+                $aboutItem->update($validated);
+                flash()->success('Service item updated successfully.');
+            } else {
+                // Create new item
+                ServiceItem::create($validated);
+                flash()->success('Service item created successfully.');
+            }
+
+        } catch (Exception $e) {
+            flash()->error('An error occurred while saving the Service item.');
+            Log::error('Error saving Service item:', ['message' => $e->getMessage()]);
+        }
+        return redirect()->route('service.index');
+    }
+    public function serviceItemDelete(Request $request)
+    {
+        try {
+            // Find the item by ID
+            $item = SkillItem::findOrFail($request->delete_item_id);
+            // Delete the item
+            $item->delete();
+            flash()->success('Skill deleted successfully.');
+        } catch (Exception $e) {
+            Log::error('Error saving about item:', ['message' => $e->getMessage()]);
+            flash()->error('An error occurred while deleting the item.');
+        }
+        return redirect()->back();
     }
 
     public function portfolio()
     {
-        return view('dashboard.portfolio');
+        $about = About::with('items')->where('user_id', $this->userId)->first();
+        return view('portfolio.index', compact('about'));
     }
 
     public function testimonial()
     {
-        return view('dashboard.testimonial');
+        $about = About::with('items')->where('user_id', $this->userId)->first();
+        return view('testimonial.index', compact('about'));
     }
 
     public function generalSettings()
     {
-        return view('dashboard.general-settings');
+        $about = About::with('items')->where('user_id', $this->userId)->first();
+        return view('general-setting.index', compact('about'));
     }
 
     public function contacts()
     {
-        return view('dashboard.contacts');
+        $about = About::with('items')->where('user_id', $this->userId)->first();
+        return view('contacts.index', compact('about'));
+    }
+    public function profile()
+    {
+        $about = About::with('items')->where('user_id', $this->userId)->first();
+        return view('profile.index', compact('about'));
     }
 }

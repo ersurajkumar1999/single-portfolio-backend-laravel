@@ -11,13 +11,16 @@ class LoginController extends Controller
 {
     public function index(Request $request)
     {
+        if (Auth::check()) {
+            return redirect()->route('dashboard');
+        }
         return view('auth.login');
     }
     public function login(LoginRequest $request)
     {
         $credentials = $request->validated();
         $remember = $request->has('remember');
-        
+
         if (Auth::attempt($credentials, $remember)) {
             $user = Auth::user();
             flash()->success('Welcome back, ' . $user->name . '! You have successfully logged in.');

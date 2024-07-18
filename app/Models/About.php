@@ -11,10 +11,9 @@ class About extends Model
     protected $fillable = [
         'user_id', 'image', 'title', 'description',
     ];
-    
 
     public function items()
     {
-        return $this->hasMany(AboutItem::class);
+        return $this->hasMany(AboutItem::class)->orderBy('id', 'desc');
     }
 }
