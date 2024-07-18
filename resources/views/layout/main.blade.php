@@ -50,7 +50,7 @@
 
   <script src="https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.js"></script>
 
-  <script src="https://cdn.tiny.cloud/1/i7pkne6zvygu1pxsly827fg1zuefmtwy8wp5htau7naiywww/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+  <script src="https://cdn.tiny.cloud/1/{{env('TINYMCE_KEY')}}/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
   <script>
     tinymce.init({
       selector: 'textarea#description', // Replace this CSS selector to match the placeholder element for TinyMCE

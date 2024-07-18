@@ -133,7 +133,8 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.tiny.cloud/1/i7pkne6zvygu1pxsly827fg1zuefmtwy8wp5htau7naiywww/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://cdn.tiny.cloud/1/{{env('TINYMCE_KEY')}}/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+
 <script type="text/javascript">
     $(document).ready(function () {
             // Initialize DataTables if needed
