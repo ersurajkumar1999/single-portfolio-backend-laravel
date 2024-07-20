@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             ServiceSeeder::class,
             ServiceItemSeeder::class,
             PortfoliosTableSeeder::class,
+            ProjectSeeder::class,
             TestimonialSeeder::class,
             TestimonialItemSeeder::class,
             UserGeneralSettingSeeder::class,

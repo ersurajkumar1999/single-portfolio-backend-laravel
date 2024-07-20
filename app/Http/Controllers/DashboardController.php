@@ -4,13 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Helpers\ImageUploadHelper;
 use App\Http\Requests\CreateAboutItemRequest;
+use App\Http\Requests\CreateProjectItemRequest;
 use App\Http\Requests\CreateServiceItemRequest;
 use App\Http\Requests\CreateSkillItemRequest;
 use App\Http\Requests\UpdateAboutRequest;
+use App\Http\Requests\UpdatePortfolioRequest;
+use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Requests\UpdateServiceRequest;
 use App\Http\Requests\UpdateSkillRequest;
 use App\Models\About;
 use App\Models\AboutItem;
+use App\Models\Portfolio;
+use App\Models\Project;
+use App\Models\ProjectItem;
 use App\Models\Service;
 use App\Models\ServiceItem;
 use App\Models\Skill;
@@ -18,6 +24,7 @@ use App\Models\SkillItem;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class DashboardController extends Controller
 {
@@ -25,6 +32,7 @@ class DashboardController extends Controller
     protected $aboutId;
     protected $skillId;
     protected $serviceId;
+    protected $projectId;
 
     // Constructor
     public function __construct()
@@ -34,6 +42,7 @@ class DashboardController extends Controller
         $this->aboutId = 1;
         $this->skillId = 1;
         $this->serviceId = 1;
+        $this->projectId = 1;
     }
     public function index()
     {
@@ -189,7 +198,6 @@ class DashboardController extends Controller
     }
     public function serviceItemCreate(CreateServiceItemRequest $request)
     {
-        
         $validated = $request->validated();
         $itemId = $request->id;
         try {
@@ -215,12 +223,12 @@ class DashboardController extends Controller
     {
         try {
             // Find the item by ID
-            $item = SkillItem::findOrFail($request->delete_item_id);
+            $item = ServiceItem::findOrFail($request->delete_item_id);
             // Delete the item
             $item->delete();
-            flash()->success('Skill deleted successfully.');
+            flash()->success('Service deleted successfully.');
         } catch (Exception $e) {
-            Log::error('Error saving about item:', ['message' => $e->getMessage()]);
+            Log::error('Error saving Service item:', ['message' => $e->getMessage()]);
             flash()->error('An error occurred while deleting the item.');
         }
         return redirect()->back();
@@ -228,8 +236,132 @@ class DashboardController extends Controller
 
     public function portfolio()
     {
-        $about = About::with('items')->where('user_id', $this->userId)->first();
-        return view('portfolio.index', compact('about'));
+        $portfolio = Portfolio::with('items')->where('user_id', $this->userId)->first();
+        return view('portfolio.index', compact('portfolio'));
+    }
+
+    public function portfolioUpdate(UpdatePortfolioRequest $request)
+    {
+        $validated = $request->validated();
+        try {
+            $portfolio = Portfolio::where('user_id', $this->userId)->firstOrFail();
+            $portfolio->update($validated);
+            flash()->success('Portfolio section updated successfully.');
+        } catch (Exception $e) {
+            Log::error('Update error:', ['message' => $e->getMessage()]);
+            toastr()->error('An error occurred while updating the Portfolio section.');
+        }
+        return redirect()->back();
+    }
+    public function portfolioItemCreate(CreateServiceItemRequest $request)
+    {
+        $validated = $request->validated();
+        $itemId = $request->id;
+        try {
+            $validated['service_id'] = $this->serviceId;
+            if ($itemId) {
+                // Update existing item
+                $aboutItem = ServiceItem::findOrFail($itemId);
+                $aboutItem->update($validated);
+                flash()->success('Service item updated successfully.');
+            } else {
+                // Create new item
+                ServiceItem::create($validated);
+                flash()->success('Service item created successfully.');
+            }
+
+        } catch (Exception $e) {
+            flash()->error('An error occurred while saving the Service item.');
+            Log::error('Error saving Service item:', ['message' => $e->getMessage()]);
+        }
+        return redirect()->route('service.index');
+    }
+    public function portfolioItemDelete(Request $request)
+    {
+        try {
+            // Find the item by ID
+            $item = ServiceItem::findOrFail($request->delete_item_id);
+            // Delete the item
+            $item->delete();
+            flash()->success('Service deleted successfully.');
+        } catch (Exception $e) {
+            Log::error('Error saving Service item:', ['message' => $e->getMessage()]);
+            flash()->error('An error occurred while deleting the item.');
+        }
+        return redirect()->back();
+    }
+    public function project()
+    {
+        $project = Project::with('items')->where('user_id', $this->userId)->first();
+        return view('project.index', compact('project'));
+    }
+    public function projectUpdate(UpdateProjectRequest $request)
+    {
+        $validated = $request->validated();
+        try {
+            $project = Project::where('user_id', $this->userId)->firstOrFail();
+            $project->update($validated);
+            flash()->success('Project section updated successfully.');
+        } catch (Exception $e) {
+            Log::error('Update error:', ['message' => $e->getMessage()]);
+            toastr()->error('An error occurred while updating the Project section.');
+        }
+        return redirect()->back();
+    }
+    public function projectItemCreate(CreateProjectItemRequest $request)
+    {
+        // Check if the image is required and not present in the request
+        if (!$request->hasFile('image') && !$request->id) {
+            flash()->error('Please select an image.');
+            return redirect()->back()->withInput();
+        }
+        
+        $validated = $request->validated();
+        // dd($validated, $request->all());
+        $itemId = $request->id;
+        
+
+        try {
+            $validated['project_id'] = $this->projectId;
+            
+            if ($request->hasFile('image')) {
+                // Generate a unique file name
+                $image = $request->file('image');
+                $fileName = 'project-image-' . Str::random(10) . '.' . $image->getClientOriginalExtension();
+                $imagePath = ImageUploadHelper::uploadImage($image, $fileName, 'project');
+                $validated['image'] = $imagePath;
+            }
+
+            if ($itemId) {
+                // Update existing item
+                $aboutItem = ProjectItem::findOrFail($itemId);
+                $aboutItem->update($validated);
+                flash()->success('Projec item updated successfully.');
+            } else {
+                // Create new item
+                ProjectItem::create($validated);
+                flash()->success('Projec item created successfully.');
+            }
+
+        } catch (Exception $e) {
+            flash()->error('An error occurred while saving the Projec item.');
+            Log::error('Error saving Projec item:', ['message' => $e->getMessage()]);
+        }
+        return redirect()->route('project.index');
+    }
+    public function projectItemDelete(Request $request)
+    {
+        try {
+            // Find the item by ID
+            $item = ProjectItem::findOrFail($request->delete_item_id);
+            // Delete the item
+            $item->delete();
+            flash()->success('Project deleted successfully.');
+        } catch (Exception $e) {
+            Log::error('Error saving Project item:', ['message' => $e->getMessage()]);
+            flash()->error('An error occurred while deleting the item.');
+        }
+        return redirect()->back();
     }
 
     public function testimonial()

@@ -6,7 +6,7 @@
                 <button type="button" class="btn btn-primary" onclick="addNewItem()" id=""><i class='bx bx-plus-medical'></i></button>
             </div>
             <div class="table-responsive text-nowrap">
-                <table class="table" id="userTable">
+                <table class="table" id="serviceTable">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -23,7 +23,7 @@
                             <td>{{ $key + 1 }}</td>
                             <td>{{ $item->name }}</td>
                             <td>{{ $item->icon }}</td>
-                            <td>{{ $item->description }}</td>
+                            <td>{!! $item->description !!}</td>
                             <td>
                                 <span class="{{ $item->status == 1 ? 'text-success' : 'text-danger' }}">
                                     {{ $item->status == 1 ? 'Active' : 'Inactive' }}
@@ -131,44 +131,44 @@
 </div>
 
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.js"></script>
 <script src="https://cdn.tiny.cloud/1/{{env('TINYMCE_KEY')}}/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 
 <script type="text/javascript">
     $(document).ready(function () {
-            // Initialize DataTables if needed
-            var table = $('#userTable').DataTable();
+        // Initialize DataTables if needed
+        var table = $('#serviceTable').DataTable();
 
-            // <!-- description -->
-            tinymce.init({
-                selector: 'textarea#service_description', // Replace this CSS selector to match the placeholder element for TinyMCE
-                height: 300,
-                menubar: false,
-                plugins: 'code table lists',
-                toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table'
-            });
-
-            // Synchronize TinyMCE content with the underlying textarea before form submission
-            $('#addItemForm').on('submit', function() {
-                alert("hello");
-                tinyMCE.triggerSave();
-                // Check if the textarea is empty
-                var content = document.getElementById('service_description').value;
-                if (content.trim() === '') {
-                    alert('description is required.');
-                    return false;
-                }
-                });
+        // <!-- description -->
+        tinymce.init({
+            selector: 'textarea#service_description', // Replace this CSS selector to match the placeholder element for TinyMCE
+            height: 300,
+            menubar: false,
+            plugins: 'code table lists',
+            toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table'
         });
 
+        // Synchronize TinyMCE content with the underlying textarea before form submission
+        $('#addItemForm').on('submit', function() {
+            alert("hello");
+            tinyMCE.triggerSave();
+            // Check if the textarea is empty
+            var content = document.getElementById('service_description').value;
+            if (content.trim() === '') {
+                alert('description is required.');
+                return false;
+            }
+        });
+    });
+
         function addNewItem(){
-            // $('#addItemForm')[0].reset();
+            $('#addItemForm')[0].reset();
             $('.item-heading').html("Add New Item");
             let model = $('#addItemFormModal');
             model.modal('show');
         }
         function editItem(item){
+            console.log("item", item);
             $('#addItemForm')[0].reset();
             $('.item-heading').html("Update Item");
             setItemValue(item);
@@ -187,13 +187,10 @@
 
         function setItemValue(item) {
             $('#itemId').val(item.id);
-            $('#text').val(item.text);
+            $('#name').val(item.name);
             $('#icon').val(item.icon);
-            $('#number').val(item.number);
+            tinymce.get('service_description').setContent(item.description); // Set the content of TinyMCE editor
             $('#status').val(item.status);
         }
 
     </script>
-
-   
-  

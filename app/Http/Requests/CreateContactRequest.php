@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateServiceItemRequest extends FormRequest
+class CreateContactRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,9 +23,13 @@ class CreateServiceItemRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'icon' => 'required|string|max:255',
-            'description' => 'required|string',
-            'status' => 'required|boolean',
+            'email' => 'required|string|email|max:255',
+            'subject' => 'required|string|max:255',
+            'phone' => 'required|string|max:20',
+            'message' => 'required|string',
+            'is_closed' => 'sometimes|boolean',
+            'closed_date' => 'nullable|date',
+            'client_response' => 'nullable|string',
         ];
     }
 }

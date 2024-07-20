@@ -3,16 +3,19 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateContactRequest;
 use App\Models\About;
-use App\Models\UserResume;
-use App\Models\Service;
-use App\Models\Portfolio;
-use App\Models\Testimonial;
+use App\Models\Contact;
 use App\Models\GeneralSettings;
+use App\Models\Portfolio;
+use App\Models\Project;
+use App\Models\Service;
 use App\Models\Skill;
+use App\Models\Testimonial;
 use App\Models\User;
 use App\Models\UserGeneralSetting;
-use Illuminate\Http\Request;
+use App\Models\UserResume;
+use Exception;
 
 class UserController extends Controller
 {
@@ -66,8 +69,15 @@ class UserController extends Controller
      */
     public function about()
     {
-        $about = About::with('items')->where('user_id', $this->userId)->first();
-        return response()->json(['message' => 'User about information retrieved successfully', 'data' => $about], 200);
+        try {
+            $about = About::with(['items' => function ($query) {
+                $query->where('status', true); // Only retrieve active items
+            }])->where('user_id', $this->userId)->first();
+            return $this->successResponse('User About retrieved successfully', $about);
+
+        } catch (Exception $e) {
+            return $this->errorResponse('An error occurred while retrieving the About', 500, $e->getMessage());
+        }
     }
 
     /**
@@ -75,8 +85,15 @@ class UserController extends Controller
      */
     public function skills()
     {
-        $skills = Skill::with('items')->where('user_id', $this->userId)->first();
-        return response()->json(['message' => 'User skills information retrieved successfully', 'data' => $skills], 200);
+        try {
+            $skill = Skill::with(['items' => function ($query) {
+                $query->where('status', true); // Only retrieve active items
+            }])->where('user_id', $this->userId)->first();
+            return $this->successResponse('User skills retrieved successfully', $skill);
+
+        } catch (Exception $e) {
+            return $this->errorResponse('An error occurred while retrieving the skills', 500, $e->getMessage());
+        }
     }
 
     /**
@@ -84,15 +101,20 @@ class UserController extends Controller
      */
     public function resume()
     {
-        $resume = UserResume::with([
-            'experienceEntries' => function ($query) {
-                $query->where('status', true); // Filter active entries
-            },
-            'educationEntries' => function ($query) {
-                $query->where('status', true); // Filter active entries
-            },
-        ])->where('user_id', $this->userId)->first();
-        return response()->json(['message' => 'User resume retrieved successfully', 'data' => $resume], 200);
+        try {
+            $resume = UserResume::with([
+                'experienceEntries' => function ($query) {
+                    $query->where('status', true); // Filter active entries
+                },
+                'educationEntries' => function ($query) {
+                    $query->where('status', true); // Filter active entries
+                },
+            ])->where('user_id', $this->userId)->first();
+            return $this->successResponse('User resume retrieved successfully', $resume);
+
+        } catch (Exception $e) {
+            return $this->errorResponse('An error occurred while retrieving the resume', 500, $e->getMessage());
+        }
     }
 
     /**
@@ -100,8 +122,15 @@ class UserController extends Controller
      */
     public function service()
     {
-        $services = Service::with('items')->where('user_id', $this->userId)->first();
-        return response()->json(['message' => 'User services retrieved successfully', 'data' => $services], 200);
+        try {
+            $service = Service::with(['items' => function ($query) {
+                $query->where('status', true); // Only retrieve active items
+            }])->where('user_id', $this->userId)->first();
+            return $this->successResponse('User Service retrieved successfully', $service);
+
+        } catch (Exception $e) {
+            return $this->errorResponse('An error occurred while retrieving the Service', 500, $e->getMessage());
+        }
     }
 
     /**
@@ -109,8 +138,27 @@ class UserController extends Controller
      */
     public function portfolio()
     {
-        $portfolio = Portfolio::with('items')->where('user_id', $this->userId)->first();
-        return response()->json(['message' => 'User portfolio retrieved successfully', 'data' => $portfolio], 200);
+        try {
+            $portfolio = Portfolio::with(['items' => function ($query) {
+                $query->where('status', true); // Only retrieve active items
+            }])->where('user_id', $this->userId)->first();
+            return $this->successResponse('User Portfolio retrieved successfully', $portfolio);
+
+        } catch (Exception $e) {
+            return $this->errorResponse('An error occurred while retrieving the Portfolio', 500, $e->getMessage());
+        }
+    }
+    public function project()
+    {
+        try {
+            $project = Project::with(['items' => function ($query) {
+                $query->where('status', 1); // Only retrieve active items
+            }])->where('user_id', $this->userId)->first();
+
+            return $this->successResponse('User project retrieved successfully', $project);
+        } catch (Exception $e) {
+            return $this->errorResponse('An error occurred while retrieving the project', 500, $e->getMessage());
+        }
     }
 
     /**
@@ -118,8 +166,16 @@ class UserController extends Controller
      */
     public function testimonial()
     {
-        $testimonials = Testimonial::with('items')->where('user_id', $this->userId)->first();
-        return response()->json(['message' => 'User testimonials retrieved successfully', 'data' => $testimonials], 200);
+        try {
+            $testimonial = Testimonial::with(['items' => function ($query) {
+                $query->where('status', 1); // Only retrieve active items
+            }])->where('user_id', $this->userId)->first();
+
+            return $this->successResponse('User testimonials retrieved successfully', $testimonial);
+
+        } catch (Exception $e) {
+            return $this->errorResponse('An error occurred while retrieving the testimonials', 500, $e->getMessage());
+        }
     }
 
     /**
@@ -127,7 +183,42 @@ class UserController extends Controller
      */
     public function generalSettings()
     {
-        $generalSettings = UserGeneralSetting::where('user_id', $this->userId)->first();
-        return response()->json(['message' => 'User general settings retrieved successfully', 'data' => $generalSettings], 200);
+        try {
+            $generalSettings = UserGeneralSetting::where('user_id', $this->userId)->first();
+            return $this->successResponse('User general settings retrieved successfully', $generalSettings);
+        } catch (Exception $e) {
+            return $this->errorResponse('An error occurred while retrieving the general settings', 500, $e->getMessage());
+        }
+    }
+
+    public function contactCreate(CreateContactRequest $request)
+    {
+        $validated = $request->validated();
+        try {
+            $validated['user_id'] = $this->userId;
+            
+            $contact = Contact::create($validated);
+            return $this->successResponse('Contact Data store successfully', $contact);
+        } catch (Exception $e) {
+            return $this->errorResponse('An error occurred while retrieving the Contact', 500, $e->getMessage());
+        }
+    }
+
+    private function successResponse($message, $data = [], $status = 200)
+    {
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+            'data' => $data,
+        ], $status);
+    }
+
+    private function errorResponse($message, $status = 500, $error = null)
+    {
+        return response()->json([
+            'success' => false,
+            'message' => $message,
+            'error' => $error,
+        ], $status);
     }
 }

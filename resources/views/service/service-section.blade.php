@@ -39,7 +39,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-check" style="float: right;">
-                                <a href="{{route('about.index')}}" class="btn btn-primary">Back</a>
+                                <a href="{{ url()->previous() }}" class="btn btn-primary">Back</a>
                                 <input type="hidden" name="type" value="role">
                                 <button type="submit" class="btn btn-primary">Update</button>
                             </div>

@@ -1,29 +1,36 @@
 <div class="row">
     <div class="col-md-12">
         <div class="card">
-            <h5 class="card-header">Portfolio List</h5>
+            <h5 class="card-header">Project List</h5>
             <div class="add-new-btn">
                 <button type="button" class="btn btn-primary" onclick="addNewItem()" id=""><i class='bx bx-plus-medical'></i></button>
             </div>
             <div class="table-responsive text-nowrap">
-                <table class="table" id="userTable">
+                <table class="table" id="projectTable">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Text</th>
-                            <th>Icon</th>
-                            <th>Number</th>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Title</th>
+                            <!-- <th>description</th> -->
+                            <th>Link</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($portfolio->items as $key=> $item)
+                        @foreach ($project->items as $key=> $item)
                         <tr>
                             <td>{{ $key + 1 }}</td>
-                            <td>{{ $item->text }}</td>
-                            <td>{{ $item->icon }}</td>
-                            <td>{{ $item->number }}</td>
+                            <td>
+                                <div class="project-image">
+                                    <a target="_blank" href="{{$item->image}}"><img src="{{$item->image}}" alt="project"></a>
+                                </div>
+                            </td>
+                            <td>{{ $item->name }}</td>
+                            <td>{{ $item->title }}</td>
+                            <td> {!! $item->link ? '<a target="_blank" href="'. $item->link .'">View</a>' : 'N/A' !!}</td>
                             <td>
                                 <span class="{{ $item->status == 1 ? 'text-success' : 'text-danger' }}">
                                     {{ $item->status == 1 ? 'Active' : 'Inactive' }}
@@ -35,9 +42,9 @@
                             </td>
                         </tr>
                         @endforeach
-                        @if ($portfolio->items->isEmpty())
+                        @if ($project->items->isEmpty())
                         <tr>
-                            <td colspan="5">No items found.</td>
+                            <td colspan="8" class="text-center align-middle">No items found.</td>
                         </tr>
                         @endif
                     </tbody>
@@ -60,23 +67,40 @@
                 aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="addItemForm" method="post" action="{{route('about.item.create')}}">
+                <form id="addItemForm" method="post" action="{{route('project.item.create')}}" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="id" id="itemId">
-                    <div class="row g-2">
+                    <div class="row">
                         <div class="col mb-0">
-                            <label for="text" class="form-label">Text</label>
-                            <input type="text" id="text" class="form-control" placeholder="Text" name="text" required />
+                            <label for="name" class="form-label">Project Name</label>
+                            <input type="text" id="name" class="form-control" placeholder="Project Name" name="name" required />
                         </div>
                         <div class="col mb-0">
-                            <label for="icon" class="form-label">Icon</label>
-                            <input type="text" id="icon" class="form-control" name="icon" required />
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" id="project-title" class="form-control" name="title" placeholder="Title" required />
                         </div>
                     </div>
-                    <div class="row g-2">
+                    <div class="row mt-2">
                         <div class="col mb-0">
-                            <label for="number" class="form-label">Number</label>
-                            <input type="number" id="number" class="form-control" placeholder="123" name="number" required />
+                            <label for="project-image" class="form-label">Project Image</label>
+                            <input type="file" class="form-control {{ $errors->has('image') ? 'is-invalid' : '' }}" id="project-image" name="image" accept=".jpeg, .jpg, .png" />
+                        </div>
+                        <div class="col mb-0">
+                            <div class="about-image">
+                               <a target="_blank" href="{{asset('assets/images/default.png')}}"> <img id="image" src="{{asset('assets/images/default.png')}}" alt="about" /></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col mb-0">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea name="description" class="form-control tinymce-editor {{ $errors->has('description') ? 'is-invalid' : '' }}" id="popup_description" placeholder="Description"></textarea>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col mb-0">
+                            <label for="link" class="form-label">Link</label>
+                            <input type="text" id="link" class="form-control" placeholder="Link" name="link" />
                         </div>
                         <div class="col mb-0">
                             <label for="dobBasic" class="form-label">Status</label>
@@ -109,7 +133,7 @@
                 aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="addItemForm" method="post" action="{{route('about.item.delete')}}">
+                <form id="addItemForm" method="post" action="{{route('project.item.delete')}}">
                     @csrf
                     <input type="hidden" name="delete_item_id" id="deleteItemId">
 
@@ -127,18 +151,43 @@
         </div>
         </div>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.js"></script>
     <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+
     <script type="text/javascript">
-        $(document).ready(function () {
+       $(document).ready(function () {
             // Initialize DataTables if needed
-            var table = $('#userTable').DataTable();
+            var table = $('#projectTable').DataTable();
+
+            // <!-- description -->
+            tinymce.init({
+                selector: 'textarea#popup_description', // Replace this CSS selector to match the placeholder element for TinyMCE
+                height: 300,
+                menubar: false,
+                plugins: 'code table lists',
+                toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table'
+            });
+
+            // Synchronize TinyMCE content with the underlying textarea before form submission
+            $('#addItemForm').on('submit', function() {
+                alert("hello");
+                tinyMCE.triggerSave();
+                // Check if the textarea is empty
+                var content = document.getElementById('popup_description').value;
+                if (content.trim() === '') {
+                    alert('description is required.');
+                    return false;
+                }
+            });
         });
 
         function addNewItem(){
             $('#addItemForm')[0].reset();
+            $('#project-image').attr('required', 'required');
+            $('#image').attr('src', "{{asset('assets/images/default.png')}}");
             $('.item-heading').html("Add New Item");
             let model = $('#addItemFormModal');
+            
             model.modal('show');
         }
         function editItem(item){
@@ -159,10 +208,17 @@
         }
 
         function setItemValue(item) {
+            console.log("item11", item);
             $('#itemId').val(item.id);
-            $('#text').val(item.text);
-            $('#icon').val(item.icon);
-            $('#number').val(item.number);
+            $('#project-title').val(item.title);
+            $('#name').val(item.name);
+            // $('#image').val(item.image);
+            tinymce.get('popup_description').setContent(item.description); // Set the content of TinyMCE editor
+            $('#link').val(item.link);
             $('#status').val(item.status);
+            // Set image preview
+            $('#project-image').removeAttr('required');
+            $('#image').attr('src', item.image);
+            
         }
     </script>

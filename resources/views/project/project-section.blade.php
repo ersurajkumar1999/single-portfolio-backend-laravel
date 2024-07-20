@@ -1,8 +1,8 @@
 <div class="row">
     <div class="col-md-12">
         <div class="card mb-4">
-            <h5 class="card-header">Portfolio Information</h5>
-            <form method="POST" action="{{route('portfolio.create')}}" enctype="multipart/form-data">
+            <h5 class="card-header">Project Information</h5>
+            <form method="POST" action="{{route('project.create')}}" enctype="multipart/form-data">
                 @csrf
                 @method('POST')
                 <div class="card-body">
@@ -10,7 +10,7 @@
                         <div class="col-md-12">
                             <div>
                                 <label for="title">Title</label>
-                                <input type="text" class="form-control {{ $errors->has('title') ? 'is-invalid' : '' }}" id="title" name="title" value="{{ $portfolio->title }}" placeholder="Title" />
+                                <input type="text" class="form-control {{ $errors->has('title') ? 'is-invalid' : '' }}" id="title" name="title" value="{{ $project->title }}" placeholder="Title" />
                                 @if ($errors->has('title'))
                                 <span class="invalid-feedback">
                                     {{ $errors->first('title') }}
@@ -22,9 +22,8 @@
                             <div>
                                 <label for="description" class="form-label">Description</label>
                                 <textarea name="description" class="form-control tinymce-editor {{ $errors->has('description') ? 'is-invalid' : '' }}" id="description" placeholder="Description">
-                                {{ $portfolio->description }}
+                                {{ $project->description }}
                                 </textarea>
-                                <!-- <textarea class="tinymce-editor" id="myeditorinstance" name="body"></textarea> -->
                                 @if ($errors->has('description'))
                                 <span class="invalid-feedback">
                                     {{ $errors->first('description') }}

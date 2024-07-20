@@ -98,6 +98,12 @@
                 <div data-i18n="Basic">Portfolio </div>
               </a>
             </li>
+            <li class="menu-item {{ (Request::route()->getName() == 'project.index') ? "active": '' }} ">
+              <a href="{{route('project.index')}}" class="menu-link">
+              <i class="menu-icon tf-icons bx bx-dock-top"></i>
+                <div data-i18n="Basic">Project </div>
+              </a>
+            </li>
             <li class="menu-item {{ (Request::route()->getName() == 'testimonial.index') ? "active": '' }} ">
               <a href="{{route('testimonial.index')}}" class="menu-link">
               <i class="menu-icon tf-icons bx bx-dock-top"></i>

@@ -35,6 +35,18 @@
     font-size: 21px;
     margin: 2px;
 }
+
 .table-responsive {
     margin: 20px 24px;
+}
+
+.project-image {
+    height: 50px;
+    width: 50px;
+}
+
+.project-image img {
+    border-radius: 50px;
+    height: 100%;
+    width: 100%;
 }

@@ -40,7 +40,14 @@ Route::middleware('auth')->group(function () {
     Route::post('service-item-delete', [DashboardController::class, 'serviceItemDelete'])->name('service.item.delete');
     
     Route::get('portfolio', [DashboardController::class, 'portfolio'])->name('portfolio.index');
-    Route::post('portfolio', [DashboardController::class, 'portfolio'])->name('portfolio.create');
+    Route::post('portfolio', [DashboardController::class, 'portfolioUpdate'])->name('portfolio.create');
+    Route::post('portfolio-item-create', [DashboardController::class, 'portfolioItemCreate'])->name('portfolio.item.create');
+    Route::post('portfolio-item-delete', [DashboardController::class, 'portfolioItemDelete'])->name('portfolio.item.delete');
+
+    Route::get('project', [DashboardController::class, 'project'])->name('project.index');
+    Route::post('project', [DashboardController::class, 'projectUpdate'])->name('project.create');
+    Route::post('project-item-create', [DashboardController::class, 'projectItemCreate'])->name('project.item.create');
+    Route::post('project-item-delete', [DashboardController::class, 'projectItemDelete'])->name('project.item.delete');
     
     Route::get('testimonial', [DashboardController::class, 'testimonial'])->name('testimonial.index');
     Route::post('testimonial', [DashboardController::class, 'testimonial'])->name('testimonial.create');

@@ -40,7 +40,6 @@
                                 <textarea name="description" class="form-control tinymce-editor {{ $errors->has('description') ? 'is-invalid' : '' }}" id="description" placeholder="Description">
                                 {{ $about->description }}
                                 </textarea>
-                                <!-- <textarea class="tinymce-editor" id="myeditorinstance" name="body"></textarea> -->
                                 @if ($errors->has('description'))
                                 <span class="invalid-feedback">
                                     {{ $errors->first('description') }}
@@ -54,7 +53,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-check" style="float: right;">
-                                <a href="{{route('about.index')}}" class="btn btn-primary">Back</a>
+                                <a href="{{ url()->previous() }}" class="btn btn-primary">Back</a>
                                 <input type="hidden" name="type" value="role">
                                 <button type="submit" class="btn btn-primary">Update</button>
                             </div>
