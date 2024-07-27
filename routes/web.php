@@ -63,7 +63,7 @@ Route::middleware('auth')->group(function () {
     Route::post('contact/create', [ContactController::class, 'contactCreate'])->name('contact.create');
     
     Route::get('profile', [DashboardController::class, 'profile'])->name('profile.index');
-    Route::post('profile', [DashboardController::class, 'profile'])->name('profile.create');
+    Route::post('profile-update', [DashboardController::class, 'profileUpdate'])->name('profile.update');
 
     Route::get('open-ai', [OpenAIController::class, 'index'])->name('open-ai.index');
     Route::post('open-ai', [OpenAIController::class, 'store'])->name('open-ai.store');

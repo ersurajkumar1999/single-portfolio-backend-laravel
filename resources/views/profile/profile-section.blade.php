@@ -2,7 +2,7 @@
     <div class="col-md-12">
         <div class="card mb-4">
             <h5 class="card-header">Profile Information</h5>
-            <form method="POST" action="{{route('about.create')}}" enctype="multipart/form-data">
+            <form method="POST" action="{{route('profile.update')}}" enctype="multipart/form-data">
                 @csrf
                 @method('POST')
                 <div class="card-body">
@@ -22,6 +22,26 @@
                             @if ($errors->has('username'))
                             <span class="invalid-feedback">
                                 {{ $errors->first('username') }}
+                            </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <label for="title">Email</label>
+                            <input type="email" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" id="email" name="email" value="{{ $user->email }}" placeholder="Email" />
+                            @if ($errors->has('email'))
+                            <span class="invalid-feedback">
+                                {{ $errors->first('email') }}
+                            </span>
+                            @endif
+                        </div>
+                        <div class="col-md-6">
+                            <label for="title">Language</label>
+                            <input type="text" class="form-control {{ $errors->has('language') ? 'is-invalid' : '' }}" id="language" name="language" value="{{ $user->language }}" placeholder="Language" />
+                            @if ($errors->has('language'))
+                            <span class="invalid-feedback">
+                                {{ $errors->first('language') }}
                             </span>
                             @endif
                         </div>
@@ -69,17 +89,16 @@
                     </div>
 
                 </div>
-        </div>
-        <div class="card-footer text-muted">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-check" style="float: right;">
-                        <a href="{{route('about.index')}}" class="btn btn-primary">Back</a>
-                        <input type="hidden" name="type" value="role">
-                        <button type="submit" class="btn btn-primary">Update</button>
+                <div class="card-footer text-muted">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-check" style="float: right;">
+                                <a href="{{ url()->previous() }}" class="btn btn-primary">Back</a>
+                                <button type="submit" class="btn btn-primary">Update</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
         </div>
         </form>
     </div>

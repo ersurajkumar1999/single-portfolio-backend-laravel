@@ -186,7 +186,6 @@ class DashboardController extends Controller
                 SkillItem::create($validated);
                 flash()->success('Skill item created successfully.');
             }
-
         } catch (Exception $e) {
             flash()->error('An error occurred while saving the about item.');
             Log::error('Error saving about item:', ['message' => $e->getMessage()]);
@@ -248,7 +247,6 @@ class DashboardController extends Controller
                 ServiceItem::create($validated);
                 flash()->success('Service item created successfully.');
             }
-
         } catch (Exception $e) {
             flash()->error('An error occurred while saving the Service item.');
             Log::error('Error saving Service item:', ['message' => $e->getMessage()]);
@@ -305,7 +303,6 @@ class DashboardController extends Controller
                 Portfolio::create($validated);
                 flash()->success('Portfolio item created successfully.');
             }
-
         } catch (Exception $e) {
             flash()->error('An error occurred while saving the Service item.');
             Log::error('Error saving Service item:', ['message' => $e->getMessage()]);
@@ -377,7 +374,6 @@ class DashboardController extends Controller
                 ProjectItem::create($validated);
                 flash()->success('Projec item created successfully.');
             }
-
         } catch (Exception $e) {
             flash()->error('An error occurred while saving the Projec item.');
             Log::error('Error saving Projec item:', ['message' => $e->getMessage()]);
@@ -444,7 +440,6 @@ class DashboardController extends Controller
                 TestimonialItem::create($validated);
                 flash()->success('Testimonial item created successfully.');
             }
-
         } catch (Exception $e) {
             flash()->error('An error occurred while saving the Testimonial item1111111.');
             Log::error('Error saving Testimonial item:', ['message' => $e->getMessage()]);
@@ -482,5 +477,9 @@ class DashboardController extends Controller
     {
         $user = User::where('id', $this->userId)->first();
         return view('profile.index', compact('user'));
+    }
+    public function profileUpdate(Request $request)
+    {
+        dD($request->all());
     }
 }
