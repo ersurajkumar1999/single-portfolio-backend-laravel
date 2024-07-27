@@ -18,9 +18,14 @@ class UsersSeeder extends Seeder
             'name' => 'Super Admin',
             'email' => 'superadmin@gmail.com',
             'username' => 'superadmin',
+            'password' => Hash::make('password'), // Secure password
             'email_verified_at' => now(),
-            'password' => Hash::make('password'), // you can replace 'password' with your desired password
-            'remember_token' => str::random(10),
+            'gender' => 'Male', // Example gender
+            'dob' => '1999-01-01', // Example date of birth
+            'language' => json_encode(['English']), // Example languages
+            'image' => asset('assets/images/default.png'), // Example profile image path
+            'status' => true, // Active status
+            'remember_token' => Str::random(10), // Random token for password reset
         ]);
     }
 }

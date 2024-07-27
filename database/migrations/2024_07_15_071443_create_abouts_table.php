@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('abouts', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
-            $table->string('image');
             $table->string('title');
             $table->text('description');
             $table->timestamps();

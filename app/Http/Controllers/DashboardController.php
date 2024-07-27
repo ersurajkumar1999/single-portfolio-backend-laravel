@@ -29,6 +29,7 @@ use App\Models\Skill;
 use App\Models\SkillItem;
 use App\Models\Testimonial;
 use App\Models\TestimonialItem;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -479,7 +480,7 @@ class DashboardController extends Controller
     }
     public function profile()
     {
-        $about = About::with('items')->where('user_id', $this->userId)->first();
-        return view('profile.index', compact('about'));
+        $user = User::where('id', $this->userId)->first();
+        return view('profile.index', compact('user'));
     }
 }

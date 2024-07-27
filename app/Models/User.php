@@ -75,4 +75,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Testimonial::class);
     }
+    
+    public function socialLinks()
+    {
+        return $this->hasMany(UserSocialLink::class);
+    }
 }

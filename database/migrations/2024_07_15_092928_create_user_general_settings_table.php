@@ -14,22 +14,36 @@ return new class extends Migration
         Schema::create('user_general_settings', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id')->unique();
-            $table->string('app_name');
-            $table->string('banner_image');
+            // $table->string('app_name');
             $table->string('header_title');
             $table->text('header_description');
+            $table->string('banner_image');
             $table->json('nav_items'); // JSON column for array storage
+            $table->enum('employment_type', [
+                'Full-time',
+                'Part-time',
+                'Self-employed',
+                'Freelance',
+                'Internship',
+                'Trainee'
+            ])->nullable();
+            $table->boolean('is_freelancer')->default(false);
+            $table->decimal('hourly_rate_min', 8, 2)->nullable();
+            $table->decimal('hourly_rate_max', 8, 2)->nullable();
+            $table->string('currency_type')->default('USD');
             $table->string('contact_title');
             $table->string('contact_description');
-            $table->json('social_links'); // JSON column for object storage
+            // $table->json('social_links'); // JSON column for object storage
             $table->string('number1');
             $table->string('number2')->nullable();
             $table->string('email1');
             $table->string('email2')->nullable();
             $table->string('address');
+            $table->string('city');
+            $table->string('district');
+            $table->string('country');
             $table->text('copyright_description');
             $table->text('theme_color')->default('emerald');
-
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });

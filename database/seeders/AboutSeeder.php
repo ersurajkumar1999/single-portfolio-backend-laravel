@@ -15,7 +15,6 @@ class AboutSeeder extends Seeder
     {
         About::create([
             'user_id' => 1,
-            'image' => URL::asset('assets/images/default.png'),
             'title' => 'About Us',
             'description' => 'This is the about us description.',
         ]);

@@ -13,28 +13,28 @@ class UserGeneralSettingSeeder extends Seeder
     public function run(): void
     {
         UserGeneralSetting::create([
-            'user_id' => 1,
-            'app_name' => 'Your App Name',
-            'banner_image' => 'path/to/banner.jpg',
+            'user_id' => 1,  // Ensure this user ID exists in the users table
+            'banner_image' => asset('assets/images/default.png'),
             'header_title' => 'Welcome to Your Website',
             'header_description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-            'nav_items' => json_encode(['about', 'skills', 'resume', 'services', 'portfolio', 'testimonials', 'contact']),
+            'nav_items' => json_encode(['about', 'skills', 'resume', 'services', 'portfolio', 'testimonials', 'contact']), // JSON array
+            'employment_type' => 'Freelance', // Example value, adjust as needed
+            'is_freelancer' => true, // Example boolean value
+            'hourly_rate_min' => 25.00, // Example minimum hourly rate
+            'hourly_rate_max' => 75.00, // Example maximum hourly rate
+            'currency_type' => 'USD', // Default currency type
             'contact_title' => 'Contact Us',
             'contact_description' => 'Get in touch with us for any inquiries.',
-            'social_links' => json_encode([
-                ["name" => 'whatsapp', 'icon' => '', 'link' => ''],
-                ["name" => 'facebook', 'icon' => '', 'link' => ''],
-                ["name" => 'twitter', 'icon' => '', 'link' => ''],
-                ["name" => 'instagram', 'icon' => '', 'link' => ''],
-                ["name" => 'linkedIn', 'icon' => '', 'link' => ''],
-            ]),
             'number1' => '1234567890',
-            'number2' => null,
+            'number2' => '0987654321', // Example optional number
             'email1' => 'info@example.com',
-            'email2' => null,
+            'email2' => 'support@example.com', // Example optional email
             'address' => '123 Main St, City, Country',
+            'city' => 'CityName', // Example value
+            'district' => 'DistrictName', // Example value
+            'country' => 'CountryName', // Example value
             'copyright_description' => '© 2024 Your Company. All rights reserved.',
-            'theme_color' => 'emerald',
+            'theme_color' => 'emerald', // Default theme color
         ]);
     }
 }

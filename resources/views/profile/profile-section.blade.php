@@ -7,62 +7,81 @@
                 @method('POST')
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-12">
-                            <div>
-                                <label for="title">Title</label>
-                                <input type="text" class="form-control {{ $errors->has('title') ? 'is-invalid' : '' }}" id="title" name="title" value="{{ $about->title }}" placeholder="Title" />
-                                @if ($errors->has('title'))
-                                <span class="invalid-feedback">
-                                    {{ $errors->first('title') }}
-                                </span>
-                                @endif
-                            </div>
+                        <div class="col-md-6">
+                            <label for="title">Name</label>
+                            <input type="text" class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" id="name" name="name" value="{{ $user->name }}" placeholder="Name" />
+                            @if ($errors->has('name'))
+                            <span class="invalid-feedback">
+                                {{ $errors->first('name') }}
+                            </span>
+                            @endif
                         </div>
-                        <div class="col-md-6 mt-2">
-                            <div>
-                                <label for="about-image" class="form-label">About Image</label>
-                                <input type="file" class="form-control {{ $errors->has('image') ? 'is-invalid' : '' }}" id="about-image" name="image" accept=".jpeg, .jpg, .png" />
-                                @if ($errors->has('image'))
-                                <span class="invalid-feedback">
-                                    {{ $errors->first('image') }}
-                                </span>
-                                @endif
-                            </div>
+                        <div class="col-md-6">
+                            <label for="title">User Name</label>
+                            <input type="text" class="form-control {{ $errors->has('username') ? 'is-invalid' : '' }}" id="username" name="username" value="{{ $user->username }}" placeholder="User Name" />
+                            @if ($errors->has('username'))
+                            <span class="invalid-feedback">
+                                {{ $errors->first('username') }}
+                            </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <label for="gender">Gender</label>
+                            <select class="form-control {{ $errors->has('gender') ? 'is-invalid' : '' }}" id="gender" name="gender">
+                                <option value="">Please select</option>
+                                <option value="Male" {{ $user->gender == 'Male' ? 'selected' : '' }}>Male</option>
+                                <option value="Female" {{ $user->gender == 'Female' ? 'selected' : '' }}>Female</option>
+                                <option value="Other" {{ $user->gender == 'Other' ? 'selected' : '' }}>Other</option>
+                            </select>
+                            @if ($errors->has('gender'))
+                            <span class="invalid-feedback">
+                                {{ $errors->first('gender') }}
+                            </span>
+                            @endif
+                        </div>
+                        <div class="col-md-6">
+                            <label for="dob">Date Of Birth</label>
+                            <input type="date" class="form-control {{ $errors->has('dob') ? 'is-invalid' : '' }}" id="dob" name="dob" value="{{ $user->dob }}" />
+                            @if ($errors->has('dob'))
+                            <span class="invalid-feedback">
+                                {{ $errors->first('dob') }}
+                            </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <label for="profile-image" class="form-label">Profile Image</label>
+                            <input type="file" class="form-control {{ $errors->has('image') ? 'is-invalid' : '' }}" id="profile-image" name="image" accept=".jpeg, .jpg, .png" />
+                            @if ($errors->has('image'))
+                            <span class="invalid-feedback">
+                                {{ $errors->first('image') }}
+                            </span>
+                            @endif
                         </div>
                         <div class="col-md-6 mt-2">
                             <div class="about-image">
-                                <!-- <img src="{{asset('assets/images/default.png')}}" alt="about" /> -->
-                               <a target="_blank" href="{{$about->image}}"> <img src="{{$about->image}}" alt="about" /></a>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div>
-                                <label for="description" class="form-label">Description</label>
-                                <textarea name="description" class="form-control tinymce-editor {{ $errors->has('description') ? 'is-invalid' : '' }}" id="description" placeholder="Description">
-                                {{ $about->description }}
-                                </textarea>
-                                <!-- <textarea class="tinymce-editor" id="myeditorinstance" name="body"></textarea> -->
-                                @if ($errors->has('description'))
-                                <span class="invalid-feedback">
-                                    {{ $errors->first('description') }}
-                                </span>
-                                @endif
+                                <a target="_blank" href="{{$user->image}}"> <img src="{{$user->image}}" alt="about" /></a>
                             </div>
                         </div>
                     </div>
+
                 </div>
-                <div class="card-footer text-muted">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-check" style="float: right;">
-                                <a href="{{route('about.index')}}" class="btn btn-primary">Back</a>
-                                <input type="hidden" name="type" value="role">
-                                <button type="submit" class="btn btn-primary">Update</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
         </div>
+        <div class="card-footer text-muted">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-check" style="float: right;">
+                        <a href="{{route('about.index')}}" class="btn btn-primary">Back</a>
+                        <input type="hidden" name="type" value="role">
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </form>
     </div>
+</div>
 </div>
