@@ -215,8 +215,6 @@
               </div>
             </div>
           </div>
-          <!-- </div>
-<div class="row"> -->
           <div class="col-12 mb-4">
             <div class="card">
               <div class="card-body">
@@ -346,7 +344,7 @@
       <div class="col-md-6 col-lg-4 order-1 mb-4">
         <div class="card h-100">
           <div class="card-header">
-            <ul class="nav nav-pills" role="tablist">
+            <ul class="nav nav-pills">
               <li class="nav-item">
                 <button
                   type="button"
