@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateContactRequest;
 use App\Models\About;
 use App\Models\Contact;
-use App\Models\GeneralSettings;
 use App\Models\Portfolio;
 use App\Models\Project;
 use App\Models\Service;
@@ -152,7 +151,7 @@ class UserController extends Controller
     {
         try {
             $project = Project::with(['items' => function ($query) {
-                $query->where(); // Only retrieve active items
+                $query->where('status', true); // Only retrieve active items
             }])->where('user_id', $this->userId)->first();
 
             return $this->successResponse('User project retrieved successfully', $project);
