@@ -66,3 +66,15 @@
 .send-msg-btn-loading{
     display: none !important;
 }
+
+.bannert-image {
+    height: 150px;
+    width: 100%;
+    margin: 0 auto;
+    border: 1px solid black;
+}
+
+.bannert-image img {
+    height: 100%;
+    width: 100%;
+}

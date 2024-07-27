@@ -30,6 +30,7 @@ use App\Models\SkillItem;
 use App\Models\Testimonial;
 use App\Models\TestimonialItem;
 use App\Models\User;
+use App\Models\UserGeneralSetting;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -463,8 +464,8 @@ class DashboardController extends Controller
 
     public function generalSettings()
     {
-        $about = About::with('items')->where('user_id', $this->userId)->first();
-        return view('general-setting.index', compact('about'));
+        $setting = UserGeneralSetting::where('user_id', $this->userId)->first();
+        return view('general-setting.index', compact('setting'));
     }
 
     public function contacts()
