@@ -7,20 +7,28 @@ use App\Http\Requests\CreateAboutItemRequest;
 use App\Http\Requests\CreateProjectItemRequest;
 use App\Http\Requests\CreateServiceItemRequest;
 use App\Http\Requests\CreateSkillItemRequest;
+use App\Http\Requests\CreateTestimonialItemRequest;
 use App\Http\Requests\UpdateAboutRequest;
 use App\Http\Requests\UpdatePortfolioRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Requests\UpdateServiceRequest;
 use App\Http\Requests\UpdateSkillRequest;
+use App\Http\Requests\UpdateTestimonialRequest;
 use App\Models\About;
 use App\Models\AboutItem;
+use App\Models\Contact;
+use App\Models\EducationEntry;
+use App\Models\ExperienceEntry;
 use App\Models\Portfolio;
+use App\Models\PortfolioItem;
 use App\Models\Project;
 use App\Models\ProjectItem;
 use App\Models\Service;
 use App\Models\ServiceItem;
 use App\Models\Skill;
 use App\Models\SkillItem;
+use App\Models\Testimonial;
+use App\Models\TestimonialItem;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -33,6 +41,9 @@ class DashboardController extends Controller
     protected $skillId;
     protected $serviceId;
     protected $projectId;
+    protected $testimonialId;
+    protected $portfolioId;
+    protected $resumeId;
 
     // Constructor
     public function __construct()
@@ -43,14 +54,38 @@ class DashboardController extends Controller
         $this->skillId = 1;
         $this->serviceId = 1;
         $this->projectId = 1;
+        $this->testimonialId = 1;
+        $this->portfolioId = 1;
+        $this->resumeId = 1;
     }
     public function index()
     {
-        return view('dashboard.index');
+        $aboutItemCount = AboutItem::where('about_id', $this->aboutId)->count();
+        $skillItemCount = SkillItem::where('skill_id', $this->skillId)->count();
+        $serviceItemCount = ServiceItem::where('service_id', $this->serviceId)->count();
+        $projectItemCount = ProjectItem::where('project_id', $this->projectId)->count();
+        $testimonialItemCount = TestimonialItem::where('testimonial_id', $this->testimonialId)->count();
+        $portfolioItemCount = PortfolioItem::where('portfolio_id', $this->portfolioId)->count();
+        $contactItemCount = Contact::where('user_id', $this->userId)->count();
+        $educationItemCount = EducationEntry::where('resume_id', $this->resumeId)->count();
+        $experienceItemCount = ExperienceEntry::where('resume_id', $this->resumeId)->count();
+
+        return view('dashboard.index', compact(
+            'aboutItemCount',
+            'skillItemCount',
+            'serviceItemCount',
+            'projectItemCount',
+            'testimonialItemCount',
+            'portfolioItemCount',
+            'contactItemCount',
+            'educationItemCount',
+            'experienceItemCount'
+        ));
     }
 
     public function about()
     {
+        flash()->success('About section updated successfully.');
         $about = About::with('items')->where('user_id', $this->userId)->first();
         return view('about.index', compact('about'));
     }
@@ -258,16 +293,16 @@ class DashboardController extends Controller
         $validated = $request->validated();
         $itemId = $request->id;
         try {
-            $validated['service_id'] = $this->serviceId;
+            $validated['portfolio_id'] = $this->portfolioId;
             if ($itemId) {
                 // Update existing item
-                $aboutItem = ServiceItem::findOrFail($itemId);
+                $aboutItem = PortfolioItem::findOrFail($itemId);
                 $aboutItem->update($validated);
-                flash()->success('Service item updated successfully.');
+                flash()->success('Portfolio item updated successfully.');
             } else {
                 // Create new item
-                ServiceItem::create($validated);
-                flash()->success('Service item created successfully.');
+                Portfolio::create($validated);
+                flash()->success('Portfolio item created successfully.');
             }
 
         } catch (Exception $e) {
@@ -315,15 +350,14 @@ class DashboardController extends Controller
             flash()->error('Please select an image.');
             return redirect()->back()->withInput();
         }
-        
+
         $validated = $request->validated();
         // dd($validated, $request->all());
         $itemId = $request->id;
-        
 
         try {
             $validated['project_id'] = $this->projectId;
-            
+
             if ($request->hasFile('image')) {
                 // Generate a unique file name
                 $image = $request->file('image');
@@ -366,8 +400,69 @@ class DashboardController extends Controller
 
     public function testimonial()
     {
-        $about = About::with('items')->where('user_id', $this->userId)->first();
-        return view('testimonial.index', compact('about'));
+        $testimonial = Testimonial::with('items')->where('user_id', $this->userId)->first();
+        return view('testimonial.index', compact('testimonial'));
+    }
+    public function testimonialUpdate(UpdateTestimonialRequest $request)
+    {
+        $validated = $request->validated();
+        try {
+            $testimonial = Testimonial::where('user_id', $this->userId)->firstOrFail();
+            $testimonial->update($validated);
+            flash()->success('Testimonial section updated successfully.');
+        } catch (Exception $e) {
+            Log::error('Update error:', ['message' => $e->getMessage()]);
+            toastr()->error('An error occurred while updating the Testimonial section.');
+        }
+        return redirect()->back();
+    }
+    public function testimonialItemCreate(CreateTestimonialItemRequest $request)
+    {
+        $validated = $request->validated();
+        $itemId = $request->id;
+        try {
+            $validated['testimonial_id'] = $this->testimonialId;
+
+            $validated['image'] = asset('assets/images/default.png');
+
+            if ($request->hasFile('image')) {
+                // Generate a unique file name
+                $image = $request->file('image');
+                $fileName = 'testimonial-image-' . Str::random(10) . '.' . $image->getClientOriginalExtension();
+                $imagePath = ImageUploadHelper::uploadImage($image, $fileName, 'testimonial');
+                $validated['image'] = $imagePath;
+            }
+
+            if ($itemId) {
+                // Update existing item
+                $testimonialItem = TestimonialItem::findOrFail($itemId);
+                $testimonialItem->update($validated);
+                flash()->success('Testimonial item updated successfully.');
+            } else {
+                // Create new item
+                TestimonialItem::create($validated);
+                flash()->success('Testimonial item created successfully.');
+            }
+
+        } catch (Exception $e) {
+            flash()->error('An error occurred while saving the Testimonial item1111111.');
+            Log::error('Error saving Testimonial item:', ['message' => $e->getMessage()]);
+        }
+        return redirect()->route('testimonial.index');
+    }
+    public function testimonialItemDelete(Request $request)
+    {
+        try {
+            // Find the item by ID
+            $item = TestimonialItem::findOrFail($request->delete_item_id);
+            // Delete the item
+            $item->delete();
+            flash()->success('Testimonial deleted successfully.');
+        } catch (Exception $e) {
+            Log::error('Error saving Testimonial item:', ['message' => $e->getMessage()]);
+            flash()->error('An error occurred while deleting the item.');
+        }
+        return redirect()->back();
     }
 
     public function generalSettings()
@@ -379,7 +474,8 @@ class DashboardController extends Controller
     public function contacts()
     {
         $about = About::with('items')->where('user_id', $this->userId)->first();
-        return view('contacts.index', compact('about'));
+        $contacts = Contact::where('user_id', $this->userId)->get();
+        return view('contacts.index', compact('about', 'contacts'));
     }
     public function profile()
     {

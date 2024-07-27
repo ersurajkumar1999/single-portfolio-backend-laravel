@@ -50,3 +50,19 @@
     height: 100%;
     width: 100%;
 }
+
+.chat-preloading {
+    height: 80px;
+    width: 80px;
+    margin: 0 auto;
+    display: none;
+}
+
+.chat-preloading img {
+    height: 100%;
+    width: 100%;
+}
+
+.send-msg-btn-loading{
+    display: none !important;
+}

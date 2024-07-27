@@ -6,41 +6,21 @@
                 <button type="button" class="btn btn-primary" onclick="addNewItem()" id=""><i class='bx bx-plus-medical'></i></button>
             </div>
             <div class="table-responsive text-nowrap">
-                <table class="table" id="userTable">
+                <table class="table" id="contactTable">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Text</th>
-                            <th>Icon</th>
+                            <th>Name</th>
                             <th>Number</th>
+                            <th>Email</th>
+                            <th>Subjact</th>
+                            <th>Message</th>
                             <th>Status</th>
+                            <th>Last Updated</th>
+                            <th>Closed Date</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach ($about->items as $key=> $item)
-                        <tr>
-                            <td>{{ $key + 1 }}</td>
-                            <td>{{ $item->text }}</td>
-                            <td>{{ $item->icon }}</td>
-                            <td>{{ $item->number }}</td>
-                            <td>
-                                <span class="{{ $item->status == 1 ? 'text-success' : 'text-danger' }}">
-                                    {{ $item->status == 1 ? 'Active' : 'Inactive' }}
-                                </span>
-                            </td>
-                            <td>
-                                <a href="javascript:void(0)" onclick="editItem({{$item}})"><i class='edit-icon bx bxs-edit-alt'></i></a>
-                                <a href="javascript:void(0)" onclick="deleteItem({{$item}})"><i class='delete-icon bx bxs-trash'></i></a>
-                            </td>
-                        </tr>
-                        @endforeach
-                        @if ($about->items->isEmpty())
-                        <tr>
-                            <td colspan="5">No items found.</td>
-                        </tr>
-                        @endif
-                    </tbody>
                 </table>
             </div>
         </div>
@@ -127,6 +107,9 @@
         </div>
         </div>
     </div>
+    @section('js_script')
+
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript">
@@ -166,3 +149,29 @@
             $('#status').val(item.status);
         }
     </script>
+
+<script type="text/javascript">
+  $(function () {
+
+    var table = $('#contactTable').DataTable({
+        processing: true,
+        serverSide: true,
+        // responsive: true,
+        ajax: "{{ route('contact.index') }}",
+        columns: [
+            {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+            {data: 'name', name: 'name'},
+            {data: 'phone', name: 'phone'},
+            {data: 'email', name: 'email'},
+            {data: 'subject', name: 'subject'},
+            {data: 'message', name: 'message'},
+            {data: 'status', name: 'status', orderable: false, searchable: false},
+            {data: 'updated_at', name: 'updated_at', orderable: false, searchable: false},
+            {data: 'closed_date', name: 'closed_date'},
+            {data: 'action', name: 'action', orderable: false, searchable: false},
+        ]
+    });
+
+  });
+</script>
+@endsection

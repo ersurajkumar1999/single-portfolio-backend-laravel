@@ -3,6 +3,9 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
+      <!-- CSRF TOKEN -->
+      <meta name="csrf-token" content="{{ csrf_token() }}">
+      
     <title>Dashboard - Analytics | Sneat - Bootstrap 5 HTML Admin Template - Pro</title>
 
     <meta name="description" content="" />
@@ -19,11 +22,19 @@
 
     <link rel="stylesheet" href="{{asset('assets/vendor/fonts/boxicons.css')}}" />
 
+
     <!-- Core CSS -->
-    <link rel="stylesheet" href="{{asset('assets/vendor/css/core.css')}}" class="template-customizer-core-css" />
-    <link rel="stylesheet" href="{{asset('assets/vendor/css/theme-default.css')}}" class="template-customizer-theme-css" />
+    <!-- <link rel="stylesheet" href="{{asset('assets/vendor/css/core.css')}}" class="template-customizer-core-css" /> -->
+    <!-- <link rel="stylesheet" href="{{asset('assets/vendor/css/theme-default.css')}}" class="template-customizer-theme-css" /> -->
+
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="{{asset('assets/vendor/css/rtl/core.css')}}" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="{{asset('assets/vendor/css/rtl/theme-default.css')}}" class="template-customizer-theme-css" />
+
     <link rel="stylesheet" href="{{asset('assets/css/demo.css')}}" />
     <link rel="stylesheet" href="{{asset('assets/css/style.css')}}" />
+
+    <link rel="stylesheet" href="{{asset('assets/vendor/css/pages/app-chat.css')}}" />
 
     <!-- Vendors CSS -->
     <link rel="stylesheet" href="{{asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css')}}" />
@@ -41,3 +52,5 @@
 
 
     <!-- <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" /> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>

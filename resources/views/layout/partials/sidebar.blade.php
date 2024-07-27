@@ -127,9 +127,8 @@
 
             <li class="menu-item {{ (Request::route()->getName() == 'open-ai.index') ? "active": '' }} ">
               <a href="{{route('open-ai.index')}}" class="menu-link">
-                <i class="bx bx-user me-2"></i>
-
-                <div data-i18n="Basic">Open AI </div>
+                <i class='bx bx-chat me-2'></i>
+                <div data-i18n="Basic"> Chat GPT </div>
               </a>
             </li>
 

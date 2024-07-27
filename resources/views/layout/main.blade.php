@@ -29,6 +29,7 @@
   <script src="{{asset('assets/vendor/js/bootstrap.js')}}"></script>
   <script src="{{asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js')}}"></script>
   <script src="{{asset('assets/vendor/js/menu.js')}}"></script>
+  <script src="{{asset('assets/vendor/js/template-customizer.js')}}"></script>
 
   <script src="https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.js"></script>
 

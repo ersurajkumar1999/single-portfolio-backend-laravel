@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             TestimonialSeeder::class,
             TestimonialItemSeeder::class,
             UserGeneralSettingSeeder::class,
+            ChatMessageSeeder::class
         ]);
     }
 }

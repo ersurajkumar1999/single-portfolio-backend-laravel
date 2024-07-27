@@ -11,17 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('testimonial_items', function (Blueprint $table) {
+        Schema::create('chat_messages', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('testimonial_id');
-            $table->string('profession');
-            $table->string('name');
-            $table->string('image');
-            $table->text('feedback');
-            $table->integer('start')->default(0); 
+            $table->unsignedBigInteger('user_id');// Nullable for bot messages
+            $table->string('conversation_id')->nullable();
+            $table->enum('from', ['USER', 'BOT']);
+            $table->longText('message');
             $table->boolean('status')->default(true);
             $table->timestamps();
-            $table->foreign('testimonial_id')->references('id')->on('testimonials')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -30,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('testimonial_items');
+        Schema::dropIfExists('chat_messages');
     }
 };

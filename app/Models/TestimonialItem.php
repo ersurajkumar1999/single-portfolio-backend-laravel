@@ -9,7 +9,7 @@ class TestimonialItem extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'testimonial_id', 'profession', 'name', 'image', 'feedback', 'status'
+        'testimonial_id', 'profession', 'name', 'image', 'feedback', 'start', 'status'
     ];
 
     public function testimonial()
@@ -17,3 +17,5 @@ class TestimonialItem extends Model
         return $this->belongsTo(Testimonial::class);
     }
 }
+
+

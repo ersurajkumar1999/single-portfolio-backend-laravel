@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OpenAIController;
 use Illuminate\Support\Facades\Route;
@@ -50,18 +52,22 @@ Route::middleware('auth')->group(function () {
     Route::post('project-item-delete', [DashboardController::class, 'projectItemDelete'])->name('project.item.delete');
     
     Route::get('testimonial', [DashboardController::class, 'testimonial'])->name('testimonial.index');
-    Route::post('testimonial', [DashboardController::class, 'testimonial'])->name('testimonial.create');
-    
+    Route::post('testimonial', [DashboardController::class, 'testimonialUpdate'])->name('testimonial.create');
+    Route::post('testimonial-item-create', [DashboardController::class, 'testimonialItemCreate'])->name('testimonial.item.create');
+    Route::post('testimonial-item-delete', [DashboardController::class, 'testimonialItemDelete'])->name('testimonial.item.delete');
+
     Route::get('general-setting', [DashboardController::class, 'generalSettings'])->name('general-setting.index');
     Route::post('general-setting', [DashboardController::class, 'generalSettings'])->name('general-setting.create');
     
-    Route::get('contacts', [DashboardController::class, 'contacts'])->name('contact.index');
-    Route::post('contacts', [DashboardController::class, 'contacts'])->name('contact.create');
+    Route::get('contacts', [ContactController::class, 'index'])->name('contact.index');
+    Route::post('contact/create', [ContactController::class, 'contactCreate'])->name('contact.create');
     
     Route::get('profile', [DashboardController::class, 'profile'])->name('profile.index');
     Route::post('profile', [DashboardController::class, 'profile'])->name('profile.create');
 
     Route::get('open-ai', [OpenAIController::class, 'index'])->name('open-ai.index');
+    Route::post('open-ai', [OpenAIController::class, 'store'])->name('open-ai.store');
+    Route::get('chat-process', [OpenAIController::class, 'chatProcess'])->name('open-ai.chat-process');
     
     Route::get('logout', [LogoutController::class, 'logout'])->name('auth.logout');
 });

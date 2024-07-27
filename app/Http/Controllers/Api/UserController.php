@@ -152,7 +152,7 @@ class UserController extends Controller
     {
         try {
             $project = Project::with(['items' => function ($query) {
-                $query->where('status', 1); // Only retrieve active items
+                $query->where(); // Only retrieve active items
             }])->where('user_id', $this->userId)->first();
 
             return $this->successResponse('User project retrieved successfully', $project);
