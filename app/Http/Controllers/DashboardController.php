@@ -14,6 +14,7 @@ use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Requests\UpdateServiceRequest;
 use App\Http\Requests\UpdateSkillRequest;
 use App\Http\Requests\UpdateTestimonialRequest;
+use App\Http\Requests\UpdateUserGeneralSettingsRequest;
 use App\Models\About;
 use App\Models\AboutItem;
 use App\Models\Contact;
@@ -464,8 +465,40 @@ class DashboardController extends Controller
 
     public function generalSettings()
     {
+        // Access the employment types array from the model
+        $employmentTypes = UserGeneralSetting::$employmentTypes;
         $setting = UserGeneralSetting::where('user_id', $this->userId)->first();
-        return view('general-setting.index', compact('setting'));
+        return view('general-setting.index', compact(['setting', 'employmentTypes']));
+    }
+    public function generalSettingsUpdate(UpdateUserGeneralSettingsRequest $request)
+    {
+        $validated = $request->validated();
+        try {
+            // Validate the request data
+            $validated = $request->validated();
+
+            if ($request->hasFile('banner_image')) {
+                // Generate a unique file name
+                $image = $request->file('banner_image');
+                $fileName = 'banner-image-' . Str::random(10) . '.' . $image->getClientOriginalExtension();
+                $imagePath = ImageUploadHelper::uploadImage($image, $fileName, 'banners');
+                $validated['banner_image'] = $imagePath;
+            }
+
+            // Retrieve the setting record by id
+            $setting = UserGeneralSetting::where('user_id', $this->userId)->first();
+
+            // Update the setting record with validated data
+            $setting->update($validated);
+
+            flash()->success('Settings updated successfully.');
+        } catch (\Exception $e) {
+            // Flash error message
+            flash()->errro('An error occurred while updating the settings: ' . $e->getMessage());
+        }
+
+        // Redirect back to the settings page
+        return redirect()->route('general-setting.index');
     }
 
     public function contacts()

@@ -31,7 +31,7 @@ class UserGeneralSettingSeeder extends Seeder
             'email2' => 'support@example.com', // Example optional email
             'address' => '123 Main St, City, Country',
             'city' => 'CityName', // Example value
-            'district' => 'DistrictName', // Example value
+            'state' => 'StateName', // Example value
             'country' => 'CountryName', // Example value
             'copyright_description' => '© 2024 Your Company. All rights reserved.',
             'theme_color' => 'emerald', // Default theme color

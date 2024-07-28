@@ -18,22 +18,6 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-md-6 mt-2">
-                            <div>
-                                <label for="about-image" class="form-label">About Image</label>
-                                <input type="file" class="form-control {{ $errors->has('image') ? 'is-invalid' : '' }}" id="about-image" name="image" accept=".jpeg, .jpg, .png" />
-                                @if ($errors->has('image'))
-                                <span class="invalid-feedback">
-                                    {{ $errors->first('image') }}
-                                </span>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="col-md-6 mt-2">
-                            <div class="about-image">
-                               <a target="_blank" href="{{$about->image}}"> <img src="{{$about->image}}" alt="about" /></a>
-                            </div>
-                        </div>
                         <div class="col-md-12">
                             <div>
                                 <label for="description" class="form-label">Description</label>

@@ -33,14 +33,13 @@ return new class extends Migration
             $table->string('currency_type')->default('USD');
             $table->string('contact_title');
             $table->string('contact_description');
-            // $table->json('social_links'); // JSON column for object storage
             $table->string('number1');
             $table->string('number2')->nullable();
             $table->string('email1');
             $table->string('email2')->nullable();
             $table->string('address');
             $table->string('city');
-            $table->string('district');
+            $table->string('state');
             $table->string('country');
             $table->text('copyright_description');
             $table->text('theme_color')->default('emerald');

@@ -63,7 +63,7 @@
     width: 100%;
 }
 
-.send-msg-btn-loading{
+.send-msg-btn-loading {
     display: none !important;
 }
 
@@ -75,6 +75,20 @@
 }
 
 .bannert-image img {
+    height: 100%;
+    width: 100%;
+}
+
+.menu .app-brand.demo {
+    margin-left: -20px;
+}
+
+.app-brand-logo {
+    height: 50px;
+    width: 50px;
+}
+
+.app-brand-logo img {
     height: 100%;
     width: 100%;
 }

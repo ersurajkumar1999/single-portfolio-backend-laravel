@@ -57,7 +57,7 @@ Route::middleware('auth')->group(function () {
     Route::post('testimonial-item-delete', [DashboardController::class, 'testimonialItemDelete'])->name('testimonial.item.delete');
 
     Route::get('general-setting', [DashboardController::class, 'generalSettings'])->name('general-setting.index');
-    Route::post('general-setting', [DashboardController::class, 'generalSettings'])->name('general-setting.create');
+    Route::post('general-setting', [DashboardController::class, 'generalSettingsUpdate'])->name('general-setting.create');
     
     Route::get('contacts', [ContactController::class, 'index'])->name('contact.index');
     Route::post('contact/create', [ContactController::class, 'contactCreate'])->name('contact.create');
