@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users_social_links', function (Blueprint $table) {
+        Schema::create('user_social_links', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('portfolio_id');
+            $table->unsignedBigInteger('user_id');
             $table->string('platform');
             $table->string('icon');
             $table->string('link');
             $table->boolean('status')->default(true);
             $table->timestamps();
-            $table->foreign('portfolio_id')->references('id')->on('portfolios')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users_social_links');
+        Schema::dropIfExists('user_social_links');
     }
 };

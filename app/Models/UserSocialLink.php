@@ -13,7 +13,6 @@ class UserSocialLink extends Model
         'platform',
         'icon',
         'link',
-        'visibility',
         'status',
     ];
 
