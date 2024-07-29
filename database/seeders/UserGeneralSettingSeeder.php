@@ -17,7 +17,7 @@ class UserGeneralSettingSeeder extends Seeder
             'banner_image' => asset('assets/images/default.png'),
             'header_title' => 'Welcome to Your Website',
             'header_description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-            'nav_items' => json_encode(['about', 'skills', 'resume', 'services', 'portfolio', 'testimonials', 'contact']), // JSON array
+            'nav_items' => json_encode(['about', 'skills', 'resume', 'services', 'portfolio', 'project', 'testimonials', 'contact']), // JSON array
             'employment_type' => 'Freelance', // Example value, adjust as needed
             'is_freelancer' => true, // Example boolean value
             'hourly_rate_min' => 25.00, // Example minimum hourly rate

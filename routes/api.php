@@ -17,5 +17,6 @@ Route::get('portfolio', [UserController::class, 'portfolio']);
 Route::get('project', [UserController::class, 'project']);
 Route::get('testimonial', [UserController::class, 'testimonial']);
 Route::get('general-settings', [UserController::class, 'generalSettings']);
+Route::get('settings', [UserController::class, 'getGeneralSettings']);
 
 Route::post('contact/create', [UserController::class, 'contactCreate']);
