@@ -194,6 +194,7 @@ class UserController extends Controller
             $social_links = UserSocialLink::select('id', 'platform', 'icon', 'link')->where('user_id', $this->userId)->get();
             $full_address = $generalSettings->address . ", " . $generalSettings->city . ", " . $generalSettings->state . ", " . $generalSettings->country;
             $data['name'] = $user->name;
+            $data['image'] = $user->image;
             $data['header_title'] = $generalSettings->header_title;
             $data['header_description'] = $generalSettings->header_description;
             $data['banner_image'] = $generalSettings->banner_image;
