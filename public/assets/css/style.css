@@ -86,9 +86,14 @@
 .app-brand-logo {
     height: 50px;
     width: 50px;
+    border-radius: 50px;
 }
 
 .app-brand-logo img {
     height: 100%;
     width: 100%;
+}
+.chat-message-wrapper img{
+    height: 40px;
+    width: 40px;
 }

@@ -6,6 +6,7 @@ use App\Models\ChatMessage;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use OpenAI\Laravel\Facades\OpenAI;
 use Symfony\Component\HttpClient\Chunk\ServerSentEvent;
 use Symfony\Component\HttpClient\EventSourceHttpClient;
 use Symfony\Component\HttpClient\HttpClient;
@@ -24,7 +25,7 @@ class OpenAIController extends Controller
     {
         if ($request->ajax()) {
             try {
-                sleep(2);
+                // sleep(2);
                 $messages = ChatMessage::orderBy('created_at', 'asc')->paginate(50);
                 return response()->json(['status' => true, 'message' => "Messages loaded successfully!", 'data' => $messages]);
             } catch (Exception $e) {
@@ -38,14 +39,13 @@ class OpenAIController extends Controller
     {
         $request->validate(['message' => 'required']);
         try {
-            sleep(2);
-            $open_ai = config('app.openai.key');
-            $response = $this->createThread($open_ai);
+            // sleep(2);
+            $words = count(explode(' ', ($request->message)));
             $message = ChatMessage::create([
                 'user_id' => $this->userId,
                 'from' => 'USER',
                 'message' => $request->message,
-                'conversation_id'=> $response['id']
+                'words' => $words,
             ]);
             return response()->json(['status' => true, 'message' => "Message store successfully!", 'data' => $message]);
 
@@ -149,7 +149,7 @@ class OpenAIController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    public function chatProcess(Request $request)
+    public function chatProcess1(Request $request)
     {
         $chatId = $request->chat_id;
         Log::info('chatId : ' . $chatId);
@@ -176,7 +176,7 @@ class OpenAIController extends Controller
 
             $url = 'https://api.openai.com/v1/threads/' . $chatId . '/runs';
 
-            Log::info('createMessage url :'. $url);
+            Log::info('createMessage url :' . $url);
 
             $headers = [
                 'OpenAI-Beta' => 'assistants=v2',
@@ -192,7 +192,7 @@ class OpenAIController extends Controller
                 'stream' => true,
             ]);
 
-            Log::info('body url :'. $body);
+            Log::info('body url :' . $body);
 
             try {
                 Log::info('client try start :');
@@ -304,22 +304,77 @@ class OpenAIController extends Controller
         $url = 'https://api.openai.com/v1/threads';
 
         $ch = curl_init();
-                    
+
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true); 
+        curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'Content-Type: application/json',
             'OpenAI-Beta: assistants=v2',
             'Authorization: Bearer ' . $openai,
-        )); 
+        ));
 
         $result = curl_exec($ch);
         curl_close($ch);
 
-        $response = json_decode($result , true);
+        $response = json_decode($result, true);
 
         return $response;
 
+    }
+
+    public function chatProcess(Request $request)
+    {
+        $chatId = $request->chat_id;
+        $chat = ChatMessage::find($chatId);
+        return response()->stream(function () use ($chat) {
+            $respone = "";
+            $stream = OpenAI::chat()->createStreamed([
+                'model' => 'gpt-3.5-turbo',
+                'temperature' => 0.8,
+                'messages' => [
+                    [
+                        'role' => 'user',
+                        'content' => $chat->message,
+                    ],
+                ],
+                'max_tokens' => 200,
+            ]);
+
+            foreach ($stream as $response) {
+                $text = $response->choices[0]->delta->content;
+                $respone .= $response->choices[0]->delta->content;
+                if (connection_aborted()) {
+                    break;
+                }
+
+                echo "event: update\n";
+                echo 'data: ' . $text;
+                echo "\n\n";
+                ob_flush();
+                flush();
+            }
+
+            echo "event: update\n";
+            echo 'data: <DONE>';
+            echo "\n\n";
+            ob_flush();
+            flush();
+
+            $words = count(explode(' ', ($respone)));
+           
+            // Respond with a chatbot message
+            ChatMessage::create([
+                'user_id' => $this->userId,
+                'from' => 'BOT',
+                'message' =>  $respone,
+                'words' => $words
+            ]);
+
+        }, 200, [
+            'Cache-Control' => 'no-cache',
+            'X-Accel-Buffering' => 'no',
+            'Content-Type' => 'text/event-stream',
+        ]);
     }
 }

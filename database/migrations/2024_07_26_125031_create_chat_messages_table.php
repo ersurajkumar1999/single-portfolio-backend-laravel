@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('chat_messages', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');// Nullable for bot messages
-            $table->string('conversation_id')->nullable();
+            $table->integer('words')->nullable()->default(0);
             $table->enum('from', ['USER', 'BOT']);
             $table->longText('message');
             $table->boolean('status')->default(true);

@@ -16,7 +16,7 @@ class ChatMessage extends Model
         'from',
         'message',
         'status',
-        'conversation_id'
+        'words'
     ];
     public function user()
     {

@@ -1,5 +1,11 @@
 <div class="app-chat overflow-hidden card">
   <div class="row g-0">
+    <style>
+      .loading {
+      display: inline-flex;
+      align-items: center;
+      }
+    </style>
     <!-- Chat History -->
     <div class="col app-chat-history">
       <div class="chat-history-wrapper">
@@ -27,13 +33,13 @@
             </div>
           </div>
         </div>
-        <div class="chat-history-body">
+        <div class="chat-history-body chat-body">
           <div class="chat-preloading">
             <img src="{{asset('assets/images/logo/preloading.svg')}}" alt="preloading">
           </div>
 
           <ul class="list-unstyled chat-history mb-0">
-            <!-- <li class="chat-message">
+          <!-- <li class="chat-message">
               <div class="d-flex overflow-hidden">
                 <div class="user-avatar flex-shrink-0 me-3">
                   <div class="avatar avatar-sm">
@@ -71,121 +77,7 @@
                   </div>
                 </div>
               </div>
-            </li>
-            <li class="chat-message">
-              <div class="d-flex overflow-hidden">
-                <div class="user-avatar flex-shrink-0 me-3">
-                  <div class="avatar avatar-sm">
-                    <img src="{{asset('assets/images/logo/openai.svg')}}" alt="Avatar" class="rounded-circle">
-                  </div>
-                </div>
-                <div class="chat-message-wrapper flex-grow-1">
-                  <div class="chat-message-text">
-                    <p class="mb-0">Looks clean and fresh UI. 😃</p>
-                  </div>
-                  <div class="chat-message-text mt-2">
-                    <p class="mb-0">It's perfect for my next project.</p>
-                  </div>
-                  <div class="chat-message-text mt-2">
-                    <p class="mb-0">How can I purchase it?111111111111111111</p>
-                  </div>
-                  <div class="text-muted mt-1">
-                    <small>10:05 AM</small>
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li class="chat-message chat-message-right">
-              <div class="d-flex overflow-hidden">
-                <div class="chat-message-wrapper flex-grow-1">
-                  <div class="chat-message-text">
-                    <p class="mb-0">Thanks, you can purchase it.</p>
-                  </div>
-                  <div class="text-end text-muted mt-1">
-                    <i class='bx bx-check-double text-success'></i>
-                    <small>10:06 AM</small>
-                  </div>
-                </div>
-                <div class="user-avatar flex-shrink-0 ms-3">
-                  <div class="avatar avatar-sm">
-                    <img src="{{asset('assets/images/default.png')}}" alt="Avatar" class="rounded-circle">
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li class="chat-message">
-              <div class="d-flex overflow-hidden">
-                <div class="user-avatar flex-shrink-0 me-3">
-                  <div class="avatar avatar-sm">
-                    <img src="{{asset('assets/images/default.png')}}" alt="Avatar" class="rounded-circle">
-                  </div>
-                </div>
-                <div class="chat-message-wrapper flex-grow-1">
-                  <div class="chat-message-text">
-                    <p class="mb-0">I will purchase it for sure. 👍</p>
-                  </div>
-                  <div class="chat-message-text mt-2">
-                    <p class="mb-0">Thanks.</p>
-                  </div>
-                  <div class="text-muted mt-1">
-                    <small>10:08 AM</small>
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li class="chat-message chat-message-right">
-              <div class="d-flex overflow-hidden">
-                <div class="chat-message-wrapper flex-grow-1">
-                  <div class="chat-message-text">
-                    <p class="mb-0">Great, Feel free to get in touch.</p>
-                  </div>
-                  <div class="text-end text-muted mt-1">
-                    <i class='bx bx-check-double text-success'></i>
-                    <small>10:10 AM</small>
-                  </div>
-                </div>
-                <div class="user-avatar flex-shrink-0 ms-3">
-                  <div class="avatar avatar-sm">
-                    <img src="{{asset('assets/images/default.png')}}" alt="Avatar" class="rounded-circle">
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li class="chat-message">
-              <div class="d-flex overflow-hidden">
-                <div class="user-avatar flex-shrink-0 me-3">
-                  <div class="avatar avatar-sm">
-                    <img src="{{asset('assets/images/default.png')}}" alt="Avatar" class="rounded-circle">
-                  </div>
-                </div>
-                <div class="chat-message-wrapper flex-grow-1">
-                  <div class="chat-message-text">
-                    <p class="mb-0">Do you have design files for Sneat?</p>
-                  </div>
-                  <div class="text-muted mt-1">
-                    <small>10:15 AM</small>
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li class="chat-message chat-message-right">
-              <div class="d-flex overflow-hidden">
-                <div class="chat-message-wrapper flex-grow-1 w-50">
-                  <div class="chat-message-text">
-                    <p class="mb-0">Yes that's correct documentation file, Design files are included with the template.</p>
-                  </div>
-                  <div class="text-end text-muted mt-1">
-                    <i class='bx bx-check-double'></i>
-                    <small>10:15 AM</small>
-                  </div>
-                </div>
-                <div class="user-avatar flex-shrink-0 ms-3">
-                  <div class="avatar avatar-sm">
-                    <img src="{{asset('assets/images/default.png')}}" alt="Avatar" class="rounded-circle">
-                  </div>
-                </div>
-              </div>
-            </li> -->
+            </li>-->
           </ul>
         </div>
         <!-- Chat message form -->
@@ -194,10 +86,10 @@
             <input name="message" id="message" class="form-control message-input border-0 me-3 shadow-none" placeholder="Type your message here...">
             <div class="message-actions d-flex align-items-center">
               <i class="speech-to-text bx bx-microphone bx-sm cursor-pointer"></i>
-              <!-- <label for="attach-doc" class="form-label mb-0">
+              <label for="attach-doc" class="form-label mb-0">
                 <i class="bx bx-paperclip bx-sm cursor-pointer mx-3 text-body"></i>
                 <input type="file" id="attach-doc" hidden>
-              </label> -->
+              </label>
               <button type="submit" class="btn btn-primary d-flex send-msg-btn-loading">
                 <div class="spinner-border" role="status"></div>
                 <span class="align-middle d-md-inline-block d-none "> sending...</span>
@@ -206,7 +98,7 @@
                 <i class="bx bx-paper-plane me-md-1 me-0 send-icon"></i>
                 <span class="align-middle d-md-inline-block d-none">Send</span>
               </button>
-              
+
             </div>
           </form>
         </div>

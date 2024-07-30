@@ -20,7 +20,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->enum('gender', ['Male', 'Female', 'Other'])->nullable();
             $table->date('dob')->nullable();
-            $table->json('language')->default(json_encode([]));
+            $table->json('language')->nullable();
             $table->string('image')->nullable();
             $table->boolean('status')->default(true);
             $table->softDeletes();

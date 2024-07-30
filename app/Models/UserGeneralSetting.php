@@ -19,6 +19,7 @@ class UserGeneralSetting extends Model
         'is_freelancer',
         'hourly_rate_min',
         'hourly_rate_max',
+        'experience',
         'currency_type',
         'contact_title',
         'contact_description',

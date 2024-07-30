@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
-  <h4 class="py-3 mb-4"><span class="text-muted fw-light">Dashboard /</span> Chat GPT</h4>
+  <!-- <h4 class="py-1 mb-1"><span class="text-muted fw-light">Dashboard /</span> Chat GPT</h4> -->
   @include('open-ai.open-ai-section')
 </div>
 @endsection
@@ -15,12 +15,15 @@
   let bot_avatar = "";
   let user_avatar = "";
 
-  const dynamicChatList = document.querySelector(".chat-history");;
 
   $(document).ready(function() {
+    const dynamicChatList = document.querySelector(".chat-history");;
+    const sendMsgBtn = document.querySelector(".send-msg-btn");
+    const sendMsgBtnLoading = document.querySelector(".send-msg-btn-loading");
+    sendMsgBtn.style.display = 'flex';
+    sendMsgBtnLoading.style.display = 'flex';
     let currentPage = 1;
     loadChatHistory(currentPage);
-
     $('#sendMessageForm').on('submit', function(event) {
       event.preventDefault();
       toggleLoading(true);
@@ -40,80 +43,29 @@
           if (chatRresponse.status) {
             let data = chatRresponse.data;
             $('#sendMessageForm')[0].reset();
-            appendMessage(user_avatar, data)
-            // chatProcess(data);
+            dynamicChatList.scrollTop = dynamicChatList.scrollHeight;
+            appendMessage(user_avatar, data, code)
+
             let chatURL = "{{route('open-ai.chat-process')}}";
+
             eventSource = new EventSource(chatURL + "?chat_id=" + data.id);
             const response = document.getElementById(code);
-            const chatbubble = document.getElementById('chat-bubble-' + code);
-            let msg = '';
-            let i = 0;
 
             eventSource.onopen = function(e) {
               response.innerHTML = '';
             };
 
-            eventSource.onmessage = function(e) {
-
-              if (e.data == "[DONE]") {
-                msgerSendBtn.disabled = false
-                eventSource.close();
-                $msg_txt.html(escape_html(msg));
-                $div.data('message', msg);
-                hljs.highlightAll();
-                uploaded_image = '';
-
-              } else {
-                let txt;
-                txt = e.data
-
-
-                if (txt !== undefined) {
-                  msg = msg + txt;
-
-                  let str = msg;
-                  if (str.indexOf('<') === -1) {
-                    str = escape_html(msg)
-                  } else {
-                    str = str.replace(/[&<>"'`{}()\[\]]/g, (match) => {
-                      switch (match) {
-                        case '<':
-                          return '&lt;';
-                        case '>':
-                          return '&gt;';
-                        case '{':
-                          return '&#123;';
-                        case '}':
-                          return '&#125;';
-                        case '(':
-                          return '&#40;';
-                        case ')':
-                          return '&#41;';
-                        case '[':
-                          return '&#91;';
-                        case ']':
-                          return '&#93;';
-                        default:
-                          return match;
-                      }
-                    });
-                    str = str.replace(/(?:\r\n|\r|\n)/g, '<br/>');
-                  }
-
-                  $msg_txt.html(str);
-                  hljs.highlightAll();
-
-                  //response.innerHTML += txt.replace(/(?:\r\n|\r|\n)/g, '<br>');
+            eventSource.addEventListener('update', function(event) {
+              console.log("event========>", event.data);
+                if (event.data === "<DONE>") {
+                  eventSource.close();
+                    return;
                 }
-                msgerChat.scrollTop += 100;
-              }
-            };
 
-            eventSource.onerror = function(e) {
-              msgerSendBtn.disabled = false
-              console.log(e);
-              eventSource.close();
-            };
+              response.innerText += event.data
+              // Scroll to the end of the div
+              dynamicChatList.scrollTop = dynamicChatList.scrollHeight;
+            });
           }
         },
         error: function(xhr) {
@@ -142,6 +94,8 @@
           }
 
           // hljs.highlightAll();
+          // Scroll to the end of the div
+
         },
         error: function(xhr, status, error) {
           // Display a custom error message
@@ -150,40 +104,30 @@
         }
       });
     }
-
-    function chatProcess(chat) {
-      // setChatPreloading(true);
-      // alert("dell");
-      $.ajax({
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        method: 'POST',
-        url: "{{route('open-ai.chat-process')}}",
-        data: {
-          'chat_id': chat.id
-        },
-        success: function(response) {
-          console.log("response.status", response);
-          // if(response.status){
-          //   let data = response.data.data;
-          //   chats.unshift(...data);
-          //   setChatHistory();
-          //   setChatPreloading(false);
-          // }
-
-          // hljs.highlightAll();
-        },
-        error: function(xhr, status, error) {
-          // Display a custom error message
-          // alert("Something went wrong, please try again.");
-          setChatPreloading(false);
-        }
-      });
-    }
-
-    function appendMessage(avatar, chat) {
+    function appendMessage(avatar, chat, code = null) {
+      console.log("avatar:", avatar);
+      console.log("chat:", chat);
+      console.log("code:", code);
       let msgHTML;
+      let response = "";
+      let botResponseHTML = `
+            <li class="chat-message">
+              <div class="d-flex overflow-hidden">
+                <div class="user-avatar flex-shrink-0 me-3">
+                  <div class="avatar avatar-sm">
+                    <img src="{{asset('assets/images/logo/openai.svg')}}" alt="Avatar" class="rounded-circle">
+                  </div>
+                </div>
+                <div class="chat-message-wrapper flex-grow-1">
+                  <div class="chat-message-text">
+                    <p class="mb-0" id="${code}"><img width="100" height="100" src="{{asset('assets/images/logo/typing.svg')}}" alt="preloading"></p>
+                  </div>
+                  <div class="text-muted mt-1">
+                    <small>10:05 AM</small>
+                  </div>
+                </div>
+              </div>
+            </li>`
       msgHTML = `
             <li class="chat-message chat-message-right">
                 <div class="d-flex overflow-hidden">
@@ -203,8 +147,8 @@
                 </div>
               </div>
             </li>`;
-
-      dynamicChatList.insertAdjacentHTML("beforeend", msgHTML);
+      finalHTML =  (msgHTML + (code ? botResponseHTML: ''));
+      dynamicChatList.insertAdjacentHTML("beforeend", finalHTML);
     }
 
     function appendMessageSpecial(avatar, chat) {
@@ -240,6 +184,11 @@
         if (chat.from == "USER") {
           appendMessage(user_avatar, chat);
         }
+        console.log("dynamicChatList", dynamicChatList);
+        console.log("dynamicChatList.scrollTop", dynamicChatList.scrollTop);
+        console.log("dynamicChatList.scrollHeight", dynamicChatList.scrollHeight);
+
+        dynamicChatList.scrollTop = dynamicChatList.scrollHeight;
       });
 
       // hljs.highlightAll(); // Re-highlight code blocks if any

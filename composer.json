@@ -9,6 +9,7 @@
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
+        "openai-php/laravel": "^0.10.1",
         "symfony/http-client": "^7.1",
         "yajra/laravel-datatables": "^11.0",
         "yoeunes/toastr": "^3.0"

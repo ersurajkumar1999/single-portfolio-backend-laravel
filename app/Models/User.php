@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -19,8 +21,12 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'username',
         'email',
-        'password',
+        'language',
+        'gender',
+        'dob',
+        'image',
     ];
 
     /**
@@ -33,6 +39,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    protected $appends = ['date_of_birthday'];
     /**
      * Get the attributes that should be cast.
      *
@@ -43,7 +50,15 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'language' => 'array',
         ];
+    }
+
+    // Accessor to format the date attribute
+
+    public function setDateOfBirthdayAttribute()
+    {
+        return $this->dob ? Carbon::parse($this->dob)->format('jS F Y') : 'N/A';
     }
 
     public function generalSettings()
@@ -75,7 +90,7 @@ class User extends Authenticatable
     {
         return $this->hasOne(Testimonial::class);
     }
-    
+
     public function socialLinks()
     {
         return $this->hasMany(UserSocialLink::class);

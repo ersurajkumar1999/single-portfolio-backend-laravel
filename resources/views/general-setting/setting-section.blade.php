@@ -4,7 +4,6 @@
             <form method="POST" action="{{route('general-setting.create')}}" enctype="multipart/form-data">
                 @csrf
                 @method('POST')
-                {{$errors}}
                 <h5 class="card-header">Head Information</h5>
                 <div class="card-body">
                     <div class="row">
@@ -45,8 +44,29 @@
                     </div>
                 </div>
                 <hr>
+                <h5 class="card-header">Navigation Information</h5>
+                <div class="card-body">
+                    <div class="row">
+                        @php
+                            // Decode `nav_items` if it's a JSON string
+                            $navItems = is_string($setting->nav_items) ? json_decode($setting->nav_items, true) : $setting->nav_items;
+                        @endphp
+                        @foreach($navItems as $item)
+                        <div class="col-md-3 mt-2">
+                            <label for="nav_items">{{ucwords($item)}} <span class="text-red">*</span></label>
+                            <input type="text" class="form-control {{ $errors->has('nav_items') ? 'is-invalid' : '' }}" id="nav_items" name="nav_items[]" value="{{ $item }}" placeholder="Navigation Name" />
+                            @if ($errors->has('nav_items'))
+                            <span class="invalid-feedback">
+                                {{ $errors->first('nav_items') }}
+                            </span>
+                            @endif
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+                <hr>
                 <h5 class="card-header">General Setting Information</h5>
-                <div class="card-body"> 
+                <div class="card-body">
                     <div class="row">
                         <div class="col-md-12 mt-2">
                             <label for="title">Contact Title</label>
@@ -107,15 +127,35 @@
                         <div class="col-md-3">
                             <label for="currency_type">Currency Type</label>
                             <select name="currency_type" id="currency_type" class="form-control {{ $errors->has('currency_type') ? 'is-invalid' : '' }}">
-                                <option value="USD">USD ($)</option>
-                                <option value="INR">INR (₹)</option>
+                                <option value="USD" {{ old('currency_type', $setting->currency_type) == 'USD' ? 'selected' : '' }}>USD ($)</option>
+                                <option value="INR" {{ old('currency_type', $setting->currency_type) == 'INR' ? 'selected' : '' }}>INR (₹)</option>
                             </select>
                             @if ($errors->has('currency_type'))
+                                <span class="invalid-feedback">
+                                    {{ $errors->first('currency_type') }}
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <label for="experience">Experience in Years</label>
+                            <input type="number" class="form-control {{ $errors->has('experience') ? 'is-invalid' : '' }}" id="experience" name="experience" value="{{ $setting->experience }}" placeholder="Enter Your Experience" />
+                            @if ($errors->has('experience'))
                             <span class="invalid-feedback">
-                                {{ $errors->first('currency_type') }}
+                                {{ $errors->first('experience') }}
                             </span>
                             @endif
                         </div>
+                        <!-- <div class="col-md-6">
+                            <label for="number2">Contact Alternate Number </label>
+                            <input type="number" class="form-control {{ $errors->has('number2') ? 'is-invalid' : '' }}" id="number2" name="number2" value="{{ $setting->number2 }}" placeholder="Contact Alternate" />
+                            @if ($errors->has('number2'))
+                            <span class="invalid-feedback">
+                                {{ $errors->first('number2') }}
+                            </span>
+                            @endif
+                        </div> -->
                     </div>
                     <div class="row mt-2">
                         <div class="col-md-6">

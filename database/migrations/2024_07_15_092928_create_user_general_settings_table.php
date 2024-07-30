@@ -25,11 +25,12 @@ return new class extends Migration
                 'Self-employed',
                 'Freelance',
                 'Internship',
-                'Trainee'
+                'Trainee',
             ])->nullable();
             $table->boolean('is_freelancer')->default(false);
             $table->decimal('hourly_rate_min', 8, 2)->nullable();
             $table->decimal('hourly_rate_max', 8, 2)->nullable();
+            $table->integer('experience')->default(0);
             $table->string('currency_type')->default('USD');
             $table->string('contact_title');
             $table->string('contact_description');

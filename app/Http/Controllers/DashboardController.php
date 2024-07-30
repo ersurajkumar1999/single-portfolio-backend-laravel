@@ -15,6 +15,7 @@ use App\Http\Requests\UpdateServiceRequest;
 use App\Http\Requests\UpdateSkillRequest;
 use App\Http\Requests\UpdateTestimonialRequest;
 use App\Http\Requests\UpdateUserGeneralSettingsRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\About;
 use App\Models\AboutItem;
 use App\Models\Contact;
@@ -512,8 +513,28 @@ class DashboardController extends Controller
         $user = User::where('id', $this->userId)->first();
         return view('profile.index', compact('user'));
     }
-    public function profileUpdate(Request $request)
+    public function profileUpdate(UpdateUserRequest $request)
     {
-        dD($request->all());
+        $validated = $request->validated();
+        // dD($request->all(), $validated );
+        try {
+            if ($request->hasFile('image')) {
+                // Generate a unique file name
+                $image = $request->file('image');
+                $fileName = 'user-image-' . Str::random(10) . '.' . $image->getClientOriginalExtension();
+                $imagePath = ImageUploadHelper::uploadImage($image, $fileName, 'users');
+                $validated['image'] = $imagePath;
+            }
+
+            $user = User::where('id', $this->userId)->first();
+            $user->update($validated);
+
+            flash()->success('User updated successfully.');
+        } catch (Exception $e) {
+            // Flash error message
+            flash()->errro('An error occurred while updating the User: ' . $e->getMessage());
+        }
+        // Redirect back to the settings page
+        return redirect()->route('profile.index');
     }
 }

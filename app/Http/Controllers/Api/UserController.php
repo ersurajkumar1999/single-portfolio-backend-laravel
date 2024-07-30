@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Models\UserGeneralSetting;
 use App\Models\UserResume;
 use App\Models\UserSocialLink;
+use Carbon\Carbon;
 use Exception;
 
 class UserController extends Controller
@@ -69,11 +70,33 @@ class UserController extends Controller
      */
     public function about()
     {
+        $data = [];
         try {
-            $about = About::with(['items' => function ($query) {
-                $query->where('status', true); // Only retrieve active items
-            }])->where('user_id', $this->userId)->first();
-            return $this->successResponse('User About retrieved successfully', $about);
+            // $about = About::with(['items' => function ($query) {
+            //     $query->where('status', true); // Only retrieve active items
+            // }])->where('user_id', $this->userId)->first();
+            $about = About::where('user_id', $this->userId)->first();
+            $user = User::where('id', $this->userId)->first();
+            $generalSettings = UserGeneralSetting::where('user_id', $this->userId)->first();
+
+            $currency_type = $generalSettings->currency_type == "USD" ? "$" : "₹";
+
+            $hourly_rate = $currency_type . $generalSettings->hourly_rate_min . " - " . $currency_type . $generalSettings->hourly_rate_max;
+
+            $data['title'] = $about->title;
+            $data['description'] = $about->description;
+            $data['image'] = $user->image;
+            $data['about_information'] = [
+                'Birthday' => $user->dob ? Carbon::parse($user->dob)->format('jS F Y') : 'N/A',
+                'Age' => $user->dob ? Carbon::parse($user->dob)->age . 'Yr' : 'N/A',
+                "Email" => $user->email ?? "N/A",
+                "Phone" => $generalSettings->number1 ?? "N/A",
+                'Residence' => $generalSettings->country ?? 'N/A',
+                "Job Type" => $generalSettings->employment_type ?? "N/A",
+                "Experience" => $generalSettings->experience . "+ Years" ?? "N/A",
+                "Hourly Rate" => $hourly_rate,
+            ];
+            return $this->successResponse('User About retrieved successfully', $data);
         } catch (Exception $e) {
             return $this->errorResponse('An error occurred while retrieving the About', 500, $e->getMessage());
         }

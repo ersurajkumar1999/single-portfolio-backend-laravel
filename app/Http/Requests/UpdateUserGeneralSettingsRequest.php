@@ -30,6 +30,7 @@ class UpdateUserGeneralSettingsRequest extends FormRequest
             // 'is_freelancer' => 'required|boolean',
             'hourly_rate_min' => 'nullable|numeric|min:0',
             'hourly_rate_max' => 'nullable|numeric|min:0|gte:hourly_rate_min',
+            'experience' => 'nullable|numeric|min:0',
             'currency_type' => 'required|string|max:3',
             'contact_title' => 'required|string|max:255',
             'contact_description' => 'required|string|max:255',

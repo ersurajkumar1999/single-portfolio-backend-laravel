@@ -38,7 +38,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="title">Language</label>
-                            <input type="text" class="form-control {{ $errors->has('language') ? 'is-invalid' : '' }}" id="language" name="language" value="{{ $user->language }}" placeholder="Language" />
+                            <input type="text" class="form-control {{ $errors->has('language') ? 'is-invalid' : '' }}" id="languages" name="language" value="{{ $user->language }}" placeholder="Language" />
                             @if ($errors->has('language'))
                             <span class="invalid-feedback">
                                 {{ $errors->first('language') }}
@@ -99,8 +99,16 @@
                         </div>
                     </div>
                 </div>
+            </form>
         </div>
-        </form>
     </div>
 </div>
-</div>
+
+@section('js_script')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var input = document.querySelector('#languages');
+        new Tagify(input);
+    });
+</script>
+@endsection
