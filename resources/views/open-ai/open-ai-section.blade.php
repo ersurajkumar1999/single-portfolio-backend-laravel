@@ -90,9 +90,9 @@
                 <i class="bx bx-paperclip bx-sm cursor-pointer mx-3 text-body"></i>
                 <input type="file" id="attach-doc" hidden>
               </label>
-              <button type="submit" class="btn btn-primary d-flex send-msg-btn-loading">
+              <button type="submit" id="sending-msg-loading" disabled class="btn btn-primary  " style="display: none;" >
                 <div class="spinner-border" role="status"></div>
-                <span class="align-middle d-md-inline-block d-none "> sending...</span>
+                <span class="align-middle d-md-inline-block">&nbsp;sending...</span>
               </button>
               <button type="submit" class="btn btn-primary d-flex send-msg-btn">
                 <i class="bx bx-paper-plane me-md-1 me-0 send-icon"></i>

@@ -222,23 +222,7 @@
             let model = $('#addItemFormModal');
             model.modal('show');
         }
-        // function editItem(item){
-        //     $('#addItemForm')[0].reset();
-        //     $('.item-heading').html("Update Item");
-        //     setItemValue(item);
-        //     let model = $('#addItemFormModal');
-        //     model.modal('show');
-        // }
-
-        // function deleteItem(item){
-        //     $('.item-heading').html("Confirm Item Deletion");
-        //     console.log("item", item);
-        //     $('#deleteItemId').val(item.id);
-        //     $('#addItemForm')[0].reset();
-        //     let model = $('#deleteItemFormModal');
-        //     model.modal('show');
-        // }
-
+       
         function setItemValue(item) {
             $('#itemId').val(item.id);
             $('#name').val(item.name);

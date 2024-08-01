@@ -47,17 +47,13 @@
     </div>
 </div>
 
-    <!--Add or Update Item Modal -->
-    <div class="modal fade" id="addItemFormModal" tabindex="-1" role="dialog" aria-labelledby="addItemFormModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+<!--Add or Update Item Modal -->
+<div class="modal fade" id="addItemFormModal" tabindex="-1" role="dialog" aria-labelledby="addItemFormModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-            <h5 class="modal-title item-heading"></h5>
-            <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"></button>
+                <h5 class="modal-title item-heading"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="addItemForm" method="post" action="{{route('about.item.create')}}">
@@ -80,7 +76,7 @@
                         </div>
                         <div class="col mb-0">
                             <label for="dobBasic" class="form-label">Status</label>
-                            <select name="status" id="status" class="form-control"  required>
+                            <select name="status" id="status" class="form-control" required>
                                 <option value="1">Active</option>
                                 <option value="0">In Active</option>
                             </select>
@@ -93,20 +89,16 @@
                 </form>
             </div>
         </div>
-        </div>
     </div>
+</div>
 
-    <!--Item Delete Modal -->
-    <div class="modal fade" id="deleteItemFormModal" tabindex="-1" role="dialog" aria-labelledby="deleteItemFormModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+<!--Item Delete Modal -->
+<div class="modal fade" id="deleteItemFormModal" tabindex="-1" role="dialog" aria-labelledby="deleteItemFormModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-            <h5 class="modal-title item-heading"></h5>
-            <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"></button>
+                <h5 class="modal-title item-heading"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="addItemForm" method="post" action="{{route('about.item.delete')}}">
@@ -125,44 +117,43 @@
                 </form>
             </div>
         </div>
-        </div>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            // Initialize DataTables if needed
-            var table = $('#userTable').DataTable();
-        });
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Initialize DataTables if needed
+        var table = $('#userTable').DataTable();
+    });
 
-        function addNewItem(){
-            $('#addItemForm')[0].reset();
-            $('.item-heading').html("Add New Item");
-            let model = $('#addItemFormModal');
-            model.modal('show');
-        }
-        function editItem(item){
-            $('#addItemForm')[0].reset();
-            $('.item-heading').html("Update Item");
-            setItemValue(item);
-            let model = $('#addItemFormModal');
-            model.modal('show');
-        }
+    function addNewItem() {
+        $('#addItemForm')[0].reset();
+        $('.item-heading').html("Add New Item");
+        let model = $('#addItemFormModal');
+        model.modal('show');
+    }
 
-        function deleteItem(item){
-            $('.item-heading').html("Confirm Item Deletion");
-            console.log("item", item);
-            $('#deleteItemId').val(item.id);
-            $('#addItemForm')[0].reset();
-            let model = $('#deleteItemFormModal');
-            model.modal('show');
-        }
+    function editItem(item) {
+        $('#addItemForm')[0].reset();
+        $('.item-heading').html("Update Item");
+        setItemValue(item);
+        let model = $('#addItemFormModal');
+        model.modal('show');
+    }
 
-        function setItemValue(item) {
-            $('#itemId').val(item.id);
-            $('#text').val(item.text);
-            $('#icon').val(item.icon);
-            $('#number').val(item.number);
-            $('#status').val(item.status);
-        }
-    </script>
+    function deleteItem(item) {
+        $('.item-heading').html("Confirm Item Deletion");
+        console.log("item", item);
+        $('#deleteItemId').val(item.id);
+        $('#addItemForm')[0].reset();
+        let model = $('#deleteItemFormModal');
+        model.modal('show');
+    }
+
+    function setItemValue(item) {
+        $('#itemId').val(item.id);
+        $('#text').val(item.text);
+        $('#icon').val(item.icon);
+        $('#number').val(item.number);
+        $('#status').val(item.status);
+    }
+</script>

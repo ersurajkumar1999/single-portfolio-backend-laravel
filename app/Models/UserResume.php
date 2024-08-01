@@ -10,7 +10,7 @@ class UserResume extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'title', 'description', 'summary_heading', 'summary_title', 'summary_content', 'status'
+        'user_id', 'title', 'description', 'summary_heading','experience_heading','education_heading','resume', 'summary_title', 'summary_content', 'status'
     ];
 
     public function educationEntries()

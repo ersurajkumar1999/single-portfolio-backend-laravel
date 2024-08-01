@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateAboutRequest extends FormRequest
+class UpdateResumeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,9 +23,13 @@ class UpdateAboutRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255',
+            'resume' => 'nullable|file|mimes:pdf|max:20480', // Allow PDF files up to 20MB
             'description' => 'required|string',
-            'my_title' => 'required|string|max:255',
-            'my_description' => 'required|string',
+            'summary_heading' => 'required|string|max:255',
+            'summary_title' => 'required|string|max:255',
+            'summary_content' => 'required|string',
+            'education_heading' => 'required|string|max:255',
+            'experience_heading' => 'required|string|max:255',
         ];
     }
 }

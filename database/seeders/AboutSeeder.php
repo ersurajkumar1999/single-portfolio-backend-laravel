@@ -17,6 +17,8 @@ class AboutSeeder extends Seeder
             'user_id' => 1,
             'title' => 'About Us',
             'description' => 'This is the about us description.',
+            'my_title' => 'I am ErSuraj Kumar',
+            'my_description' => 'This is More description.',
         ]);
     }
 }

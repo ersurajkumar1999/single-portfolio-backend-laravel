@@ -4,13 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Helpers\ImageUploadHelper;
 use App\Http\Requests\CreateAboutItemRequest;
+use App\Http\Requests\CreatePortfolioItemRequest;
 use App\Http\Requests\CreateProjectItemRequest;
 use App\Http\Requests\CreateServiceItemRequest;
 use App\Http\Requests\CreateSkillItemRequest;
 use App\Http\Requests\CreateTestimonialItemRequest;
+use App\Http\Requests\StoreEducationEntryRequest;
+use App\Http\Requests\StoreExperienceEntryRequest;
+use App\Http\Requests\StoreUserSocialLinkRequest;
 use App\Http\Requests\UpdateAboutRequest;
 use App\Http\Requests\UpdatePortfolioRequest;
 use App\Http\Requests\UpdateProjectRequest;
+use App\Http\Requests\UpdateResumeRequest;
 use App\Http\Requests\UpdateServiceRequest;
 use App\Http\Requests\UpdateSkillRequest;
 use App\Http\Requests\UpdateTestimonialRequest;
@@ -33,6 +38,8 @@ use App\Models\Testimonial;
 use App\Models\TestimonialItem;
 use App\Models\User;
 use App\Models\UserGeneralSetting;
+use App\Models\UserResume;
+use App\Models\UserSocialLink;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -71,8 +78,8 @@ class DashboardController extends Controller
         $testimonialItemCount = TestimonialItem::where('testimonial_id', $this->testimonialId)->count();
         $portfolioItemCount = PortfolioItem::where('portfolio_id', $this->portfolioId)->count();
         $contactItemCount = Contact::where('user_id', $this->userId)->count();
-        $educationItemCount = EducationEntry::where('resume_id', $this->resumeId)->count();
-        $experienceItemCount = ExperienceEntry::where('resume_id', $this->resumeId)->count();
+        $educationItemCount = EducationEntry::where('user_id', $this->userId)->count();
+        $experienceItemCount = ExperienceEntry::where('user_id', $this->userId)->count();
 
         return view('dashboard.index', compact(
             'aboutItemCount',
@@ -89,7 +96,6 @@ class DashboardController extends Controller
 
     public function about()
     {
-        flash()->success('About section updated successfully.');
         $about = About::with('items')->where('user_id', $this->userId)->first();
         return view('about.index', compact('about'));
     }
@@ -212,10 +218,113 @@ class DashboardController extends Controller
 
     public function resume()
     {
-        $about = About::with('items')->where('user_id', $this->userId)->first();
-        return view('resume.index', compact('about'));
+        $resume = UserResume::where('user_id', $this->userId)->first();
+        $educations = EducationEntry::where('user_id', $this->userId)->orderBy('id', 'desc')->get();
+        $experiences = ExperienceEntry::where('user_id', $this->userId)->orderBy('id', 'desc')->get();
+        return view('resume.index', compact(['resume', 'educations', 'experiences']));
     }
 
+    public function resumeUpdate(UpdateResumeRequest $request)
+    {
+        $validated = $request->validated();
+        try {
+            if ($request->hasFile('resume')) {
+                // Generate a unique file name
+                $image = $request->file('resume');
+                $fileName = 'resume-' . $this->userId . '.' . $image->getClientOriginalExtension();
+                $imagePath = ImageUploadHelper::uploadImage($image, $fileName, 'resumes');
+                $validated['resume'] = $imagePath;
+            }
+            $resume = UserResume::where('user_id', $this->userId)->firstOrFail();
+            $resume->update($validated);
+            flash()->success('Resume section updated successfully.');
+        } catch (Exception $e) {
+            Log::error('Update error:', ['message' => $e->getMessage()]);
+            toastr()->error('An error occurred while updating the Resume section.');
+        }
+        return redirect()->back();
+    }
+    public function removeResumePdf()
+    {
+        try {
+            $validated['resume'] = null;
+            $resume = UserResume::where('user_id', $this->userId)->firstOrFail();
+            $resume->update($validated);
+            flash()->success('Resume remove successfully.');
+        } catch (Exception $e) {
+            Log::error('Update error:', ['message' => $e->getMessage()]);
+            toastr()->error('An error occurred while updating the Resume section.');
+        }
+        return redirect()->back();
+    }
+
+    public function experienceCreate(StoreExperienceEntryRequest $request)
+    {
+        $validated = $request->validated();
+        $experienceId = $request->id;
+        try {
+            $validated['user_id'] = $this->userId;
+            if ($experienceId) {
+                $experience = ExperienceEntry::findOrFail($experienceId);
+                $experience->update($validated);
+                flash()->success('Experience updated successfully.');
+            } else {
+                ExperienceEntry::create($validated);
+                flash()->success('Experience created successfully.');
+            }
+        } catch (Exception $e) {
+            flash()->error('An error occurred while saving the Experience.');
+            Log::error('Error saving Experience:', ['message' => $e->getMessage()]);
+        }
+        return redirect()->back();
+    }
+
+    public function experienceDelete(Request $request)
+    {
+        try {
+            $experience = ExperienceEntry::findOrFail($request->delete_experience_id);
+            $experience->delete();
+            flash()->success('Experience deleted successfully.');
+        } catch (Exception $e) {
+            Log::error('Error saving Experience:', ['message' => $e->getMessage()]);
+            flash()->error('An error occurred while deleting the Experience.');
+        }
+        return redirect()->back();
+    }
+    public function educationCreate(StoreEducationEntryRequest $request)
+    {
+        $validated = $request->validated();
+        $educationId = $request->id;
+        try {
+            $validated['user_id'] = $this->userId;
+            if ($educationId) {
+                $education = EducationEntry::findOrFail($educationId);
+                $education->update($validated);
+                flash()->success('Education updated successfully.');
+            } else {
+                EducationEntry::create($validated);
+                flash()->success('Education created successfully.');
+            }
+        } catch (Exception $e) {
+            flash()->error('An error occurred while saving the Education.');
+            Log::error('Error saving Education:', ['message' => $e->getMessage()]);
+        }
+        return redirect()->back();
+    }
+
+    public function educationDelete(Request $request)
+    {
+        $educationId = $request->delete_education_id;
+        try {
+            $education = EducationEntry::findOrFail($educationId);
+            $education->delete();
+            flash()->success('Education deleted successfully.');
+        } catch (Exception $e) {
+            Log::error('Error saving Education:', ['message' => $e->getMessage()]);
+            flash()->error('An error occurred while deleting the Education.');
+        }
+        return redirect()->back();
+    }
     public function service()
     {
         $service = Service::with('items')->where('user_id', $this->userId)->first();
@@ -290,38 +399,53 @@ class DashboardController extends Controller
         }
         return redirect()->back();
     }
-    public function portfolioItemCreate(CreateServiceItemRequest $request)
+
+    public function portfolioItemCreate(CreatePortfolioItemRequest $request)
     {
         $validated = $request->validated();
         $itemId = $request->id;
         try {
+
+            $validated['image'] = asset('assets/images/default.png');
+
+            if ($request->hasFile('image')) {
+                // Generate a unique file name
+                $image = $request->file('image');
+                $fileName = 'portfolio-image-' . Str::random(10) . '.' . $image->getClientOriginalExtension();
+                $imagePath = ImageUploadHelper::uploadImage($image, $fileName, 'portfolio');
+                $validated['image'] = $imagePath;
+            }
+
             $validated['portfolio_id'] = $this->portfolioId;
             if ($itemId) {
                 // Update existing item
-                $aboutItem = PortfolioItem::findOrFail($itemId);
-                $aboutItem->update($validated);
+                $portfolio = PortfolioItem::findOrFail($itemId);
+                if (!$request->hasFile('image')) {
+                    $validated['image'] = $portfolio->image;
+                }
+                $portfolio->update($validated);
                 flash()->success('Portfolio item updated successfully.');
             } else {
                 // Create new item
-                Portfolio::create($validated);
+                PortfolioItem::create($validated);
                 flash()->success('Portfolio item created successfully.');
             }
         } catch (Exception $e) {
-            flash()->error('An error occurred while saving the Service item.');
-            Log::error('Error saving Service item:', ['message' => $e->getMessage()]);
+            flash()->error('An error occurred while saving the Portfolio item.');
+            Log::error('Error saving Portfolio item:', ['message' => $e->getMessage()]);
         }
-        return redirect()->route('service.index');
+        return redirect()->route('portfolio.index');
     }
     public function portfolioItemDelete(Request $request)
     {
         try {
             // Find the item by ID
-            $item = ServiceItem::findOrFail($request->delete_item_id);
+            $item = PortfolioItem::findOrFail($request->delete_item_id);
             // Delete the item
             $item->delete();
-            flash()->success('Service deleted successfully.');
+            flash()->success('Portfolio deleted successfully.');
         } catch (Exception $e) {
-            Log::error('Error saving Service item:', ['message' => $e->getMessage()]);
+            Log::error('Error saving Portfolio item:', ['message' => $e->getMessage()]);
             flash()->error('An error occurred while deleting the item.');
         }
         return redirect()->back();
@@ -464,6 +588,48 @@ class DashboardController extends Controller
         return redirect()->back();
     }
 
+    public function socialLink()
+    {
+        $items = UserSocialLink::where('user_id', $this->userId)->orderBY('id', 'desc')->get();
+        return view('social-links.index', compact('items'));
+    }
+    public function socialLinkCreate(StoreUserSocialLinkRequest $request)
+    {
+        $validated = $request->validated();
+        $itemId = $request->id;
+        try {
+            $validated['user_id'] = $this->userId;
+            if ($itemId) {
+                // Update existing item
+                $testimonialItem = UserSocialLink::findOrFail($itemId);
+                $testimonialItem->update($validated);
+                flash()->success('Social Link updated successfully.');
+            } else {
+                // Create new item
+                UserSocialLink::create($validated);
+                flash()->success('Social Link created successfully.');
+            }
+        } catch (Exception $e) {
+            flash()->error('An error occurred while saving the Social Link.');
+            Log::error('Error saving Social Link:', ['message' => $e->getMessage()]);
+        }
+        return redirect()->back();
+    }
+    public function socialLinkDelete(Request $request)
+    {
+        try {
+            // Find the item by ID
+            $item = UserSocialLink::findOrFail($request->delete_item_id);
+            // Delete the item
+            $item->delete();
+            flash()->success('Social Link deleted successfully.');
+        } catch (Exception $e) {
+            Log::error('Error saving Social Link :', ['message' => $e->getMessage()]);
+            flash()->error('An error occurred while deleting the Social Link.');
+        }
+        return redirect()->back();
+    }
+
     public function generalSettings()
     {
         // Access the employment types array from the model
@@ -516,7 +682,6 @@ class DashboardController extends Controller
     public function profileUpdate(UpdateUserRequest $request)
     {
         $validated = $request->validated();
-        // dD($request->all(), $validated );
         try {
             if ($request->hasFile('image')) {
                 // Generate a unique file name

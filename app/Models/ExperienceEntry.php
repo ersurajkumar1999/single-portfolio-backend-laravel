@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class ExperienceEntry extends Model
 {
     use HasFactory;
-    protected $fillable = ['resume_id', 'job_role', 'duration', 'location', 'job_description'];
+    protected $fillable = ['user_id', 'job_role', 'duration', 'location', 'job_description', 'status'];
 
     public function resume()
     {
-        return $this->belongsTo(UserResume::class, 'resume_id');
+        return $this->belongsTo(UserResume::class, 'user_id');
     }
 }

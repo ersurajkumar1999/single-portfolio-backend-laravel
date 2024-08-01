@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateContactRequest;
 use App\Models\About;
 use App\Models\Contact;
+use App\Models\EducationEntry;
+use App\Models\ExperienceEntry;
 use App\Models\Portfolio;
 use App\Models\Project;
 use App\Models\Service;
@@ -78,13 +80,16 @@ class UserController extends Controller
             $about = About::where('user_id', $this->userId)->first();
             $user = User::where('id', $this->userId)->first();
             $generalSettings = UserGeneralSetting::where('user_id', $this->userId)->first();
-
+            $resume = UserResume::where('user_id', $this->userId)->first();
             $currency_type = $generalSettings->currency_type == "USD" ? "$" : "₹";
 
             $hourly_rate = $currency_type . $generalSettings->hourly_rate_min . " - " . $currency_type . $generalSettings->hourly_rate_max;
 
             $data['title'] = $about->title;
             $data['description'] = $about->description;
+            $data['my_title'] = $about->my_title;
+            $data['my_description'] = $about->my_description;
+            $data['resume'] = $resume->resume;
             $data['image'] = $user->image;
             $data['about_information'] = [
                 'Birthday' => $user->dob ? Carbon::parse($user->dob)->format('jS F Y') : 'N/A',
@@ -122,16 +127,36 @@ class UserController extends Controller
      */
     public function resume()
     {
+        $data = [];
         try {
-            $resume = UserResume::with([
-                'experienceEntries' => function ($query) {
-                    $query->where('status', true); // Filter active entries
-                },
-                'educationEntries' => function ($query) {
-                    $query->where('status', true); // Filter active entries
-                },
-            ])->where('user_id', $this->userId)->first();
-            return $this->successResponse('User resume retrieved successfully', $resume);
+
+            // $resume = UserResume::with([
+            //     'experienceEntries' => function ($query) {
+            //         $query->where('status', true); // Filter active entries
+            //     },
+            //     'educationEntries' => function ($query) {
+            //         $query->where('status', true); // Filter active entries
+            //     },
+            // ])->where('user_id', $this->userId)->first();
+
+            $resume = UserResume::where('user_id', $this->userId)->first();
+            $educations = EducationEntry::where(['user_id' => $this->userId, 'status' => true])->orderBy('id', 'desc')->get();
+            $experience = ExperienceEntry::where(['user_id' => $this->userId, 'status' => true])->orderBy('id', 'desc')->get();
+
+            $data['title'] = $resume->title;
+            $data['description'] = $resume->description;
+            $data['resume'] = $resume->resume;
+            $data['summary_heading'] = $resume->summary_heading;
+            $data['summary_title'] = $resume->summary_title;
+            $data['summary_content'] = $resume->summary_content;
+
+            $data['education_heading'] = $resume->education_heading;
+            $data['experience_heading'] = $resume->experience_heading;
+
+            $data['educations'] = $educations;
+            $data['experience'] = $experience;
+
+            return $this->successResponse('User resume retrieved successfully', $data);
         } catch (Exception $e) {
             return $this->errorResponse('An error occurred while retrieving the resume', 500, $e->getMessage());
         }

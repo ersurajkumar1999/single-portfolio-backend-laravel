@@ -64,6 +64,13 @@
                 <div data-i18n="Basic">Testimonial </div>
               </a>
             </li>
+            <li class="menu-item {{ (Request::route()->getName() == 'social-link.index') ? "active": '' }} ">
+              <a href="{{route('social-link.index')}}" class="menu-link">
+              <i class="menu-icon tf-icons bx bxl-meta"></i>
+              
+                <div data-i18n="Basic">Social Media Links </div>
+              </a>
+            </li>
             <li class="menu-item {{ (Request::route()->getName() == 'contact.index') ? "active": '' }} ">
               <a href="{{route('contact.index')}}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-support"></i>

@@ -17,12 +17,10 @@
 
 
   $(document).ready(function() {
-    const dynamicChatList = document.querySelector(".chat-history");;
-    const sendMsgBtn = document.querySelector(".send-msg-btn");
-    const sendMsgBtnLoading = document.querySelector(".send-msg-btn-loading");
-    sendMsgBtn.style.display = 'flex';
-    sendMsgBtnLoading.style.display = 'flex';
+    const dynamicChatList = document.querySelector(".chat-history");
+    // toggleLoading(true)
     let currentPage = 1;
+    $('#sending-msg-loading').css({'display': 'none !important'});
     loadChatHistory(currentPage);
     $('#sendMessageForm').on('submit', function(event) {
       event.preventDefault();
@@ -57,10 +55,11 @@
 
             eventSource.addEventListener('update', function(event) {
               console.log("event========>", event.data);
-                if (event.data === "<DONE>") {
-                  eventSource.close();
-                    return;
-                }
+              if (event.data === "<DONE>") {
+                toggleLoading(false);
+                eventSource.close();
+                return;
+              }
 
               response.innerText += event.data
               // Scroll to the end of the div
@@ -104,10 +103,8 @@
         }
       });
     }
+
     function appendMessage(avatar, chat, code = null) {
-      console.log("avatar:", avatar);
-      console.log("chat:", chat);
-      console.log("code:", code);
       let msgHTML;
       let response = "";
       let botResponseHTML = `
@@ -147,7 +144,7 @@
                 </div>
               </div>
             </li>`;
-      finalHTML =  (msgHTML + (code ? botResponseHTML: ''));
+      finalHTML = (msgHTML + (code ? botResponseHTML : ''));
       dynamicChatList.insertAdjacentHTML("beforeend", finalHTML);
     }
 
@@ -184,10 +181,6 @@
         if (chat.from == "USER") {
           appendMessage(user_avatar, chat);
         }
-        console.log("dynamicChatList", dynamicChatList);
-        console.log("dynamicChatList.scrollTop", dynamicChatList.scrollTop);
-        console.log("dynamicChatList.scrollHeight", dynamicChatList.scrollHeight);
-
         dynamicChatList.scrollTop = dynamicChatList.scrollHeight;
       });
 
@@ -201,23 +194,18 @@
     }
 
     function toggleLoading(isLoading) {
+      console.log("toggleLoading isLoading:", isLoading);
       if (isLoading) {
-        $('.send-msg-btn-loading').css({
-          'display': isLoading ? 'block' : 'none'
-        });
-        $('.send-msg-btn').css({
-          'display': isLoading ? 'none' : 'block'
-        });
+        console.log("Showing loading button, hiding send button");
+        $('.send-msg-btn-loading').css('display', 'flex !important'); // Use 'flex' to ensure it's displayed correctly
+        $('.send-msg-btn').css('display', 'none111 !important');
+        $('#sending-msg-loading').css({'display': 'none !important'});
       } else {
-        $('.send-msg-btn-loading').css({
-          'display': isLoading ? 'none' : 'none'
-        });
-        $('.send-msg-btn').css({
-          'display': isLoading ? 'block' : 'none'
-        });
+        console.log("Hiding loading button, showing send button");
+        $('.send-msg-btn-loading').css('display', 'none !important');
+        $('.send-msg-btn').css('display', 'flex !important'); // Use 'flex' to ensure it's displayed correctly
       }
     }
-
     // Generate a random value
     function makeid(length) {
       let result = '';

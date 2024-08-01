@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
-use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OpenAIController;
@@ -25,22 +24,25 @@ Route::middleware('auth')->group(function () {
     Route::post('about', [DashboardController::class, 'aboutUpdate'])->name('about.create');
     Route::post('about-item-create', [DashboardController::class, 'aboutItemCreate'])->name('about.item.create');
     Route::post('about-item-delete', [DashboardController::class, 'aboutItemDelete'])->name('about.item.delete');
-    
-
 
     Route::get('skills', [DashboardController::class, 'skills'])->name('skills.index');
     Route::post('skills', [DashboardController::class, 'skillUpdate'])->name('skills.create');
     Route::post('skill-item-create', [DashboardController::class, 'skillItemCreate'])->name('skill.item.create');
     Route::post('skill-item-delete', [DashboardController::class, 'skillItemDelete'])->name('skill.item.delete');
-    
+
     Route::get('resume', [DashboardController::class, 'resume'])->name('resume.index');
-    Route::post('resume', [DashboardController::class, 'resume'])->name('resume.create');
-    
+    Route::post('resume', [DashboardController::class, 'resumeUpdate'])->name('resume.create');
+    Route::get('remove-pdf', [DashboardController::class, 'removeResumePdf'])->name('remove.pdf.create');
+    Route::post('experience-create', [DashboardController::class, 'experienceCreate'])->name('experience.create');
+    Route::post('experience-delete', [DashboardController::class, 'experienceDelete'])->name('experience.delete');
+    Route::post('education-create', [DashboardController::class, 'educationCreate'])->name('education.create');
+    Route::post('education-delete', [DashboardController::class, 'educationDelete'])->name('education.delete');
+
     Route::get('service', [DashboardController::class, 'service'])->name('service.index');
     Route::post('service', [DashboardController::class, 'serviceUpdate'])->name('service.create');
     Route::post('service-item-create', [DashboardController::class, 'serviceItemCreate'])->name('service.item.create');
     Route::post('service-item-delete', [DashboardController::class, 'serviceItemDelete'])->name('service.item.delete');
-    
+
     Route::get('portfolio', [DashboardController::class, 'portfolio'])->name('portfolio.index');
     Route::post('portfolio', [DashboardController::class, 'portfolioUpdate'])->name('portfolio.create');
     Route::post('portfolio-item-create', [DashboardController::class, 'portfolioItemCreate'])->name('portfolio.item.create');
@@ -50,24 +52,28 @@ Route::middleware('auth')->group(function () {
     Route::post('project', [DashboardController::class, 'projectUpdate'])->name('project.create');
     Route::post('project-item-create', [DashboardController::class, 'projectItemCreate'])->name('project.item.create');
     Route::post('project-item-delete', [DashboardController::class, 'projectItemDelete'])->name('project.item.delete');
-    
+
     Route::get('testimonial', [DashboardController::class, 'testimonial'])->name('testimonial.index');
     Route::post('testimonial', [DashboardController::class, 'testimonialUpdate'])->name('testimonial.create');
     Route::post('testimonial-item-create', [DashboardController::class, 'testimonialItemCreate'])->name('testimonial.item.create');
     Route::post('testimonial-item-delete', [DashboardController::class, 'testimonialItemDelete'])->name('testimonial.item.delete');
 
+    Route::get('social-link', [DashboardController::class, 'socialLink'])->name('social-link.index');
+    Route::post('social-link-create', [DashboardController::class, 'socialLinkCreate'])->name('social-link.create');
+    Route::post('social-link-delete', [DashboardController::class, 'socialLinkDelete'])->name('social-link.delete');
+
     Route::get('general-setting', [DashboardController::class, 'generalSettings'])->name('general-setting.index');
     Route::post('general-setting', [DashboardController::class, 'generalSettingsUpdate'])->name('general-setting.create');
-    
+
     Route::get('contacts', [ContactController::class, 'index'])->name('contact.index');
     Route::post('contact/create', [ContactController::class, 'contactCreate'])->name('contact.create');
-    
+
     Route::get('profile', [DashboardController::class, 'profile'])->name('profile.index');
     Route::post('profile-update', [DashboardController::class, 'profileUpdate'])->name('profile.update');
 
     Route::get('open-ai', [OpenAIController::class, 'index'])->name('open-ai.index');
     Route::post('open-ai', [OpenAIController::class, 'store'])->name('open-ai.store');
     Route::get('chat-process', [OpenAIController::class, 'chatProcess'])->name('open-ai.chat-process');
-    
+
     Route::get('logout', [LogoutController::class, 'logout'])->name('auth.logout');
 });

@@ -16,7 +16,8 @@ class PortfolioItem extends Model
     protected $fillable = [
         'portfolio_id',
         'name',
-        'link',
+        'image',
+        'status'
     ];
 
     /**

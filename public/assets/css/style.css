@@ -97,3 +97,37 @@
     height: 40px;
     width: 40px;
 }
+
+.embed-responsive {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 0;
+    overflow: hidden;
+}
+
+.embed-responsive::before {
+    content: '';
+    display: block;
+    padding-top: 56.25%; /* 16:9 ratio */
+}
+
+.embed-responsive .embed-responsive-item {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+@media (max-width: 768px) {
+    .embed-responsive::before {
+        padding-top: 75%; /* Adjust the aspect ratio for smaller screens */
+    }
+
+    .embed-responsive .embed-responsive-item {
+        height: auto; /* Adjust height to be automatic for better viewing on small screens */
+    }
+}

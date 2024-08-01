@@ -1,32 +1,30 @@
 <div class="row">
     <div class="col-md-12">
         <div class="card">
-            <h5 class="card-header">Portfolio List</h5>
+            <h5 class="card-header">Social Media Links</h5>
             <div class="add-new-btn">
                 <button type="button" class="btn btn-primary" onclick="addNewItem()" id=""><i class='bx bx-plus-medical'></i></button>
             </div>
             <div class="table-responsive text-nowrap">
-                <table class="table" id="userTable">
+                <table class="table" id="linkTable">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Name</th>
-                            <th>Image</th>
+                            <th>Platform</th>
+                            <th>Icon</th>
+                            <th>Link</th>
                             <th>Status</th>
                             <th>Last Updated</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($portfolio->items as $key=> $item)
+                        @foreach ($items as $key=> $item)
                         <tr>
                             <td>{{ $key + 1 }}</td>
-                            <td>{{ $item->name }}</td>
-                            <td>
-                                <div class="project-image">
-                                    <a target="_blank" href="{{$item->image}}"><img src="{{$item->image}}" alt="project"></a>
-                                </div>
-                            </td>
+                            <td>{{ $item->platform }}</td>
+                            <td>{{ $item->icon }}</td>
+                            <td> <a target="_blank" href="{{ $item->link }}">{{ $item->platform }}</a> </td>
                             <td>
                                 <span class="{{ $item->status == 1 ? 'text-success' : 'text-danger' }}">
                                     {{ $item->status == 1 ? 'Active' : 'Inactive' }}
@@ -34,12 +32,12 @@
                             </td>
                             <td>{{ $item->updated_at->format('d-m-Y h:i A') }}</td>
                             <td>
-                                <a href="javascript:void(0)" onclick="editItem({{$item}})"><i class='edit-icon bx bxs-edit-alt'></i></a>
-                                <a href="javascript:void(0)" onclick="deleteItem({{$item}})"><i class='delete-icon bx bxs-trash'></i></a>
+                                <a href="javascript:void(0)" class="edit-item" data-item="{{ json_encode($item) }}"><i class='edit-icon bx bxs-edit-alt'></i></a>
+                                <a href="javascript:void(0)" class="delete-item" data-item="{{$item}}"><i class='delete-icon bx bxs-trash'></i></a>
                             </td>
                         </tr>
                         @endforeach
-                        @if ($portfolio->items->isEmpty())
+                        @if ($items->isEmpty())
                         <tr>
                             <td colspan="5">No items found.</td>
                         </tr>
@@ -60,13 +58,23 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="addItemForm" method="post" action="{{route('portfolio.item.create')}}" enctype="multipart/form-data">
+                <form id="addItemForm" method="post" action="{{route('social-link.create')}}">
                     @csrf
                     <input type="hidden" name="id" id="itemId">
                     <div class="row g-2">
                         <div class="col mb-0">
-                            <label for="name" class="form-label">Name</label>
-                            <input type="text" id="name" class="form-control" placeholder="name" name="name" required />
+                            <label for="platform" class="form-label">Platform</label>
+                            <input type="text" id="platform" class="form-control" placeholder="Platform" name="platform" required />
+                        </div>
+                        <div class="col mb-0">
+                            <label for="icon" class="form-label">Icon</label>
+                            <input type="text" id="icon" class="form-control" placeholder="Icon" name="icon" required />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col mb-0">
+                            <label for="link" class="form-label">Link</label>
+                            <input type="url" id="link" class="form-control" placeholder="Link" name="link" required />
                         </div>
                         <div class="col mb-0">
                             <label for="dobBasic" class="form-label">Status</label>
@@ -76,18 +84,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="row mt-2">
-                        <div class="col mb-0">
-                            <label for="portfolio-image" class="form-label">Portfolio Image</label>
-                            <input type="file" class="form-control {{ $errors->has('image') ? 'is-invalid' : '' }}" id="portfolio-image" name="image" accept=".jpeg, .jpg, .png" />
-                        </div>
-                        <div class="col mb-0">
-                            <div class="about-image">
-                               <a target="_blank" href="{{asset('assets/images/default.png')}}"> <img id="image" src="{{asset('assets/images/default.png')}}" alt="about" /></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer mt-2">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Save changes</button>
                     </div>
@@ -106,7 +103,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="addItemForm" method="post" action="{{route('portfolio.item.delete')}}">
+                <form id="addItemForm" method="post" action="{{route('social-link.delete')}}">
                     @csrf
                     <input type="hidden" name="delete_item_id" id="deleteItemId">
 
@@ -124,43 +121,49 @@
         </div>
     </div>
 </div>
+
 <script type="text/javascript">
     $(document).ready(function() {
-        // Initialize DataTables if needed
-        var table = $('#userTable').DataTable();
+
+        var table = $('#linkTable').DataTable()
+        $('.add-item').on('click', function(e) {
+            $('#addItemForm')[0].reset();
+            $('.item-heading').html("Add New Link");
+            let model = $('#addItemFormModal');
+            model.modal('show');
+
+        });
+        $('.edit-item').on('click', function(e) {
+            var item = $(this).data('item');
+            $('#addItemForm')[0].reset();
+            $('.item-heading').html("Update Link");
+            setItemValue(item);
+            let model = $('#addItemFormModal');
+            model.modal('show');
+
+        });
+        $('.delete-item').on('click', function(e) {
+            $('.item-heading').html("Confirm Link Deletion");
+            var item = $(this).data('item');
+            $('#deleteItemId').val(item.id);
+            $('#addItemForm')[0].reset();
+            let model = $('#deleteItemFormModal');
+            model.modal('show');
+        });
     });
 
     function addNewItem() {
         $('#addItemForm')[0].reset();
         $('.item-heading').html("Add New Item");
-        $('#portfolio-image').attr('required', 'required');
-        $('#image').attr('src', "{{asset('assets/images/default.png')}}");
         let model = $('#addItemFormModal');
-        model.modal('show');
-    }
-
-    function editItem(item) {
-        $('#addItemForm')[0].reset();
-        $('.item-heading').html("Update Item");
-        setItemValue(item);
-        let model = $('#addItemFormModal');
-        model.modal('show');
-    }
-
-    function deleteItem(item) {
-        $('.item-heading').html("Confirm Item Deletion");
-        console.log("item", item);
-        $('#deleteItemId').val(item.id);
-        $('#addItemForm')[0].reset();
-        let model = $('#deleteItemFormModal');
         model.modal('show');
     }
 
     function setItemValue(item) {
         $('#itemId').val(item.id);
-        $('#name').val(item.name);
-        $('#project-image').removeAttr('required');
-        $('#image').attr('src', item.image);
+        $('#platform').val(item.platform);
+        $('#icon').val(item.icon);
+        $('#link').val(item.link);
         $('#status').val(item.status);
     }
 </script>
