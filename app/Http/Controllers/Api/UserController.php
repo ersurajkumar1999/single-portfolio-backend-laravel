@@ -84,7 +84,20 @@ class UserController extends Controller
             $currency_type = $generalSettings->currency_type == "USD" ? "$" : "₹";
 
             $hourly_rate = $currency_type . $generalSettings->hourly_rate_min . " - " . $currency_type . $generalSettings->hourly_rate_max;
-
+            
+            // Check if the Languages field is not null and decode it
+            if (!is_null($user->language)) {
+                $languages = json_decode($user->language, true);
+                // Extract the language values
+                $languageValues = array_map(function($lang) {
+                    return ucfirst($lang['value']);
+                }, $languages);
+                // Join the language values into a comma-separated string
+                $formattedLanguages = implode(', ', $languageValues);
+            } else {
+                $formattedLanguages = 'N/A';
+            }
+            
             $data['title'] = $about->title;
             $data['description'] = $about->description;
             $data['my_title'] = $about->my_title;
@@ -100,6 +113,7 @@ class UserController extends Controller
                 "Job Type" => $generalSettings->employment_type ?? "N/A",
                 "Experience" => $generalSettings->experience . "+ Years" ?? "N/A",
                 "Hourly Rate" => $hourly_rate,
+                "Languages" => $formattedLanguages
             ];
             return $this->successResponse('User About retrieved successfully', $data);
         } catch (Exception $e) {
